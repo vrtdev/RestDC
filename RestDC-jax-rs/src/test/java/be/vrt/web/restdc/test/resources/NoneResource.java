@@ -1,4 +1,4 @@
-package be.vrt.web.restdc.test.controllers;
+package be.vrt.web.restdc.test.resources;
 
 import javax.ws.rs.Path;
 

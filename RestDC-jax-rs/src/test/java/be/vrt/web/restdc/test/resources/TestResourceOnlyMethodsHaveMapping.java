@@ -1,11 +1,11 @@
-package be.vrt.web.restdc.test.controllers;
+package be.vrt.web.restdc.test.resources;
 
 import javax.ws.rs.Path;
 
 /**
  * @author Mike Seghers
  */
-public class TestControllerOnlyMethodsHaveMapping {
+public class TestResourceOnlyMethodsHaveMapping {
     @Path("/some/url")
     public void method() {
 

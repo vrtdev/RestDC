@@ -7,8 +7,8 @@ import be.vrt.web.restdc.domain.RequestMethod;
 import be.vrt.web.restdc.domain.ResourceDocument;
 import be.vrt.web.restdc.domain.Type;
 import be.vrt.web.restdc.test.Dummy;
-import be.vrt.web.restdc.test.controllers.TestResource;
-import be.vrt.web.restdc.test.controllers.TestResourceWithMime;
+import be.vrt.web.restdc.test.resources.TestResource;
+import be.vrt.web.restdc.test.resources.TestResourceWithMime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -256,7 +256,7 @@ public class PathOverridingAnnotationProcessorTest {
                 .process(method.getAnnotation(Path.class), method, TestResourceWithMime.class
                         .getAnnotation(Path.class), TestResourceWithMime.class);
 
-        assertThat(document.getUrl(), is("/test2/dummies"));
+        assertThat(document.getUrl(), is("/mime/test2/dummies"));
         assertThat(document.getRequestMethods(), hasSize(1));
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
@@ -281,7 +281,7 @@ public class PathOverridingAnnotationProcessorTest {
                 .process(method.getAnnotation(Path.class), method, TestResourceWithMime.class
                         .getAnnotation(Path.class), TestResourceWithMime.class);
 
-        assertThat(document.getUrl(), is("/test2/dummiesSuper"));
+        assertThat(document.getUrl(), is("/mime/test2/dummiesSuper"));
         assertThat(document.getRequestMethods(), hasSize(1));
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
@@ -305,7 +305,7 @@ public class PathOverridingAnnotationProcessorTest {
                 .process(method.getAnnotation(Path.class), method, TestResourceWithMime.class
                         .getAnnotation(Path.class), TestResourceWithMime.class);
 
-        assertThat(document.getUrl(), is("/test2/dummiesT"));
+        assertThat(document.getUrl(), is("/mime/test2/dummiesT"));
         assertThat(document.getRequestMethods(), hasSize(1));
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.DELETE));
         assertThat(document.getDescription(), is(nullValue()));
@@ -329,7 +329,7 @@ public class PathOverridingAnnotationProcessorTest {
                 .process(method.getAnnotation(Path.class), method, TestResourceWithMime.class
                         .getAnnotation(Path.class), TestResourceWithMime.class);
 
-        assertThat(document.getUrl(), is("/test2/dummiesTextend"));
+        assertThat(document.getUrl(), is("/mime/test2/dummiesTextend"));
         assertThat(document.getRequestMethods(), hasSize(1));
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.HEAD));
         assertThat(document.getDescription(), is(nullValue()));

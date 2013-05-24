@@ -63,7 +63,7 @@ public class SpringMVCBasedScannerTest {
         verify(controllerAnnotationProcessor)
                 .process(Mockito.any(Controller.class), Matchers.eq(TestControllerNoMapping.class));
 
-        assertThat(documentSet.getId(), is(TEST_PACKAGE_TO_SCAN));
+        assertThat(documentSet.getId(), is("Spring Controllers in package " + TEST_PACKAGE_TO_SCAN));
         assertThat(documentSet.getDocuments(), hasSize(3));
     }
 }

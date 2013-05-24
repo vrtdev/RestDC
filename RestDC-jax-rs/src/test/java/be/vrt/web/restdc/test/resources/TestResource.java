@@ -1,4 +1,4 @@
-package be.vrt.web.restdc.test.controllers;
+package be.vrt.web.restdc.test.resources;
 
 import be.vrt.web.restdc.annotation.RestDescription;
 import be.vrt.web.restdc.jaxrs.annotation.RestParameterName;

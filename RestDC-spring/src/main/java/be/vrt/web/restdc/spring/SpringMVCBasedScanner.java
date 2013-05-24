@@ -2,16 +2,10 @@ package be.vrt.web.restdc.spring;
 
 import be.vrt.web.restdc.AbstractPackageBasedDocumentSetGenerator;
 import be.vrt.web.restdc.annotation.processor.AnnotationProcessor;
-import be.vrt.web.restdc.domain.DocumentSet;
 import be.vrt.web.restdc.domain.ResourceDocument;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Set;
 
 /**
  * {@link be.vrt.web.restdc.DocumentSetGenerator} implementation for Spring MVC based generation of a REST API {@link
@@ -43,13 +37,12 @@ import java.util.Set;
  *
  * @author Mike Seghers
  */
-public class SpringMVCBasedScanner extends AbstractPackageBasedDocumentSetGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringMVCBasedScanner.class);
+public class SpringMVCBasedScanner extends AbstractPackageBasedDocumentSetGenerator<Controller> {
 
-    private AnnotationProcessor<Controller, List<ResourceDocument>, Class<?>> controllerAnnotationProcessor;
+    public static final String SPRING_CONTROLLERS = "Spring Controllers";
 
     /**
-     * Constroctor, initializing the package to scan and the {@link be.vrt.web.restdc.annotation.processor.AnnotationProcessor}
+     * Constructor, initializing the package to scan and the {@link be.vrt.web.restdc.annotation.processor.AnnotationProcessor}
      * which processes {@link org.springframework.stereotype.Controller} annotations to get a list of {@link
      * be.vrt.web.restdc.domain.ResourceDocument} based on the information found in that specific class.
      *
@@ -57,40 +50,11 @@ public class SpringMVCBasedScanner extends AbstractPackageBasedDocumentSetGenera
      * @param controllerAnnotationProcessor the controller annotation processor
      */
     public SpringMVCBasedScanner(final String basePackageName, final AnnotationProcessor<Controller, List<ResourceDocument>, Class<?>> controllerAnnotationProcessor) {
-        super(basePackageName);
-        this.controllerAnnotationProcessor = controllerAnnotationProcessor;
+        super(basePackageName, Controller.class, controllerAnnotationProcessor);
     }
 
     @Override
-    protected DocumentSet generateWithPackage(final String basePackageName) {
-        LOGGER.trace("Generating DocumentSet with package {}", basePackageName);
-        DocumentSet.DocumentSetBuilder builder = new DocumentSet.DocumentSetBuilder(basePackageName);
-        Set<Class<?>> classes = getAnnotatedClassesInPackage(Controller.class, basePackageName);
-        List<ResourceDocument> documentsForClass;
-        for (Class<?> controllerAnnotatedClass : classes) {
-            Controller annotation = controllerAnnotatedClass.getAnnotation(Controller.class);
-            documentsForClass = controllerAnnotationProcessor.process(annotation, controllerAnnotatedClass);
-            if (documentsForClass != null) {
-                builder.addAll(documentsForClass);
-            } else {
-                LOGGER.debug("No document resources found for class {}", controllerAnnotatedClass);
-            }
-        }
-
-        DocumentSet documentSet = builder.build();
-        LOGGER.debug("Done generating DocumentSet: {}", documentSet);
-        return documentSet;
-    }
-
-    /**
-     * Returns all classes in a given package which are annotated with the given annotation.
-     *
-     * @param annotationType the type of the annotation to look for
-     * @param packageName    the name of the package to scan
-     * @return all classes annotated with the given annotation
-     */
-    private Set<Class<?>> getAnnotatedClassesInPackage(final Class<? extends Annotation> annotationType, final String packageName) {
-        Reflections reflections = new Reflections(packageName);
-        return reflections.getTypesAnnotatedWith(annotationType);
+    protected String getIdPrefix() {
+        return SPRING_CONTROLLERS;
     }
 }
