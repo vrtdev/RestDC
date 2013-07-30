@@ -1,0 +1,137 @@
+@import "solarized";
+@import "compass/css3/border-radius";
+
+html{
+	font-family: Arial;
+}
+a{
+	text-decoration: none;
+}
+strong{
+	font-weight: bold;
+}
+#menu{
+	width: 300px;
+	overflow-x: hidden; 
+	font-size: 0.7em;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	z-index: 1;
+	.id a{
+		font-weight: bold;
+		color: $yellow;
+	}
+	.item{
+		margin-left:15px;
+	}
+}
+#mainpage{
+	position: absolute;
+	top: 0px;
+	left: 300px;
+	right: 5px;
+	height: 100%;
+	padding: 10px 10px 10px 10px;
+	.id a{
+		font-weight: bold;
+		font-size: 1.1em;
+		color: $yellow;
+	}
+	.element{
+		margin: 0px 5px 0px 5px;
+		padding: 10px;
+		background-color: $base02;
+		
+		.item{
+			margin: 5px 5px 15px 5px;
+			background-color: $base03;
+			.title{
+				border: 1px solid $base01;
+				padding: 2px;
+				position: relative;
+				.method{
+					float: left;
+					background-color: $yellow;
+					color: $base03;
+					text-transform:uppercase;
+					font-size: 0.7em;
+					// height: 1.4em;
+					text-align: center;
+					width: 50px;
+					padding-bottom: 0.15em;
+					padding-top: 0.3em;
+					margin-right: 2px;
+					@include border-radius(2px);
+				}
+				.last{
+					margin-right: 10px;
+				}
+				.url{
+					padding-left: 5px;
+					font-weight: bold;
+				}
+				.description{
+					position: absolute;
+					right: 2px;
+					top:2px;
+					font-size: 0.9em;
+				}
+
+			}
+		}
+		.details{
+			padding: 10px;
+			border: 1px solid $base01;
+			border-top: 0px solid $base01;
+			table{
+				width: 100%;
+				font-size: 0.9em;
+				.h1{
+					width:100px;
+				}
+				.h2{
+					width:310px;
+				}
+				.h3{
+					width:200px;
+				}
+				.h4{
+					width:100px;
+				}
+				.h5{
+					width:220px;
+				}
+				thead{
+						border-bottom: 1px solid $base01;
+
+				}
+							.name{
+								font-family: "Anonymous Pro", "Menlo", "Consolas", "Bitstream Vera Sans Mono", "Courier New", monospace;
+							}
+				tbody{
+					tr{
+						td{
+							vertical-align: top;
+							input,textarea{
+								width:300px;
+							}
+							textarea{
+								height:100px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.result{
+		margin-top: 10px;
+	div{
+		margin-bottom: 10px;
+		margin-top: 2px;
+		font-size: 0.9em;
+	}
+}

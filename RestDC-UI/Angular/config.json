@@ -1,0 +1,5 @@
+ {
+	"restDcJsonFileUrl":"/rest-dc/dc.json", 
+	"baseUrlPrefix":"/",
+	"defaultAcceptType":"application/json"
+}

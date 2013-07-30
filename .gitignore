@@ -60,3 +60,6 @@ Icon
 *~
 ### Maven ###
 target/
+
+### RestDC-UI Angular
+RestDC-UI/Angular/stylesheets/*
