@@ -13,6 +13,7 @@
         <module>RestDC-API</module>
         <module>RestDC-spring</module>
         <module>RestDC-jax-rs</module>
+        <module>RestDC-UI</module>
     </modules>
 
     <properties>

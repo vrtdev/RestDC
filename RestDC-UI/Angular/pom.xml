@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>be.vrt.web.rest-dc.ui</groupId>
+        <artifactId>rest-dc-ui-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>angular-ui</artifactId>
+    <packaging>pom</packaging>
+
+    <name>RestDC Angular UI module</name>
+    <description>REST DC Angular UI front facing module, to expose documentation through a single page app</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.saumya.mojo</groupId>
+                <artifactId>gem-maven-plugin</artifactId>
+                <version>0.29.4</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>init</id>
+                        <goals>
+                            <goal>initialize</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <execArgs>${project.build.directory}/rubygems/bin/compass compile ${basedir}/compass
+                            </execArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>rubygems</groupId>
+                        <artifactId>compass</artifactId>
+                        <version>0.12.2</version>
+                        <type>gem</type>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly/single-page-zip.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
