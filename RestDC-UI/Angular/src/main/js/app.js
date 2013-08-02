@@ -1,13 +1,16 @@
-function dcCtrl($scope,$http){
-	
+	function dcCtrl($scope,$http){
+
+    	var syntax={"html":"html","javascript":"javascript","jscript":"javascript","json":"javascript"};
+
 	$scope.dc=[];
+
 	$http.get('config.json').then(function(result){
 		$scope.config=result.data;
 		$http.get($scope.config.restDcJsonFileUrl)
 			.then(function(res){
           				$scope.dc = res.data;
         		});
-		if($scope.config.baseUrlPrefix===null || $scope.config.baseUrlPrefix.length===0){
+		if(typeof $scope.config.baseUrlPrefix==="undefined" || $scope.config.baseUrlPrefix===null || $scope.config.baseUrlPrefix.length===0){
 			var thisUrl=window.location.href.split("#")[0];
 			var path=window.location.pathname;
 			var pelem=path.split("/");
@@ -22,7 +25,10 @@ function dcCtrl($scope,$http){
 		
 	});
 
-    	var syntax={"html":"html","javascript":"javascript","jscript":"javascript","json":"javascript"};
+	if  (!$scope.$$phase) {
+		$scope.$apply();
+	}
+
 	$scope.doMethod = function(method,itemnr,docnr){
 		var httpMethod = method.toUpperCase();
 		var mydoc = $scope.dc[itemnr].documents[docnr];
@@ -76,8 +82,11 @@ function dcCtrl($scope,$http){
 		}).error(function(data, status, headers, config){
 			insertResults(mydoc.result,data, status, headers, config);
 		});
+		$scope.$apply();
 	};
+
 	var insertResults=function(result,data, status, headers, config){
+		console.log("got executed");
 		result.body=data;
 		result.code=status;
 		var header=headers();
@@ -92,6 +101,7 @@ function dcCtrl($scope,$http){
 		result.headers=flatten(header);
 		setTimeout(Rainbow.color, 500);
 	};
+
 	var flatten = function(obj){
 		var result="";
 		for(var key in obj){
