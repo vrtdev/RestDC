@@ -1,4 +1,4 @@
-	function dcCtrl($scope,$http){
+	function dcCtrl($scope,$http,$timeout){
 
     	var syntax={"html":"html","javascript":"javascript","jscript":"javascript","json":"javascript"};
 
@@ -106,7 +106,8 @@
 			}
 		}
 		result.headers=flatten(header);
-		setTimeout(Rainbow.color, 500);
+		$timeout(Rainbow.color,500);
+		// setTimeout(Rainbow.color, 500);
 	};
 
 	var flatten = function(obj){

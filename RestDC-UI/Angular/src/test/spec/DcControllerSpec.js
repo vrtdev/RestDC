@@ -5,47 +5,13 @@ describe("DcController", function(){
 	var ctrl;
 	var $httpMock;
 	var $scope;
+	var $time;
 	var createController;
-	var configjson={
-		"restDcJsonFileUrl":"/rest-dc/dc.json", 
-		"baseUrlPrefix":"/",
-		"defaultAcceptType":"application/json"
-	};
-	var configBis={
-		"restDcJsonFileUrl":"/rest-dc/dc.json", 
-		"defaultAcceptType":"application/json"
-	};
-	var dcjson=[ 
-		{ "documents" : [ 
-				{ 
-					"description" : "Insert or update content...",
-		          			"parameters" : [ 
-		          				{ 
-		          					"description" : "The content to insert or update, when id is null an insert is assumed...",
-		                				"name" : "content",
-		                				"parameterLocation" : "BODY",
-		                				"required" : true,
-		                				"type" : { "typeName" : "AbstractContent" }
-		              			},
-		              			{ 
-		              				"name" : "request",
-		                				"required" : true,
-		                				"type" : { "typeName" : "HttpServletRequest" }
-		              			}
-		            		],
-	          				"requestMethods" : [ "PUT","POST"],
-	          				"returnType" : { "typeName" : "void" },
-	          				"acceptTypes":["text/html"],
-	          				"url" : "/v0_0_1/content"
-	        			}
-	        		]
-        		}
-        	];
 
-
-	beforeEach(inject(function ($rootScope, $controller, $httpBackend) {
+	beforeEach(inject(function ($rootScope, $controller, $httpBackend,$timeout) {
 		$scope=$rootScope.$new();
 		$httpMock=$httpBackend;
+		$time=$timeout;
 		$httpMock.when('GET',configjson.restDcJsonFileUrl).respond(dcjson);
 		createController = function() {
 			var cntl=$controller('dcCtrl', {'$scope' : $scope });
@@ -74,15 +40,18 @@ describe("DcController", function(){
 		expect($scope.config.baseUrlPrefix).toMatch(/http:\/\/localhost:[0-9]{4}/);
 	});
 	it("should do a POST request ",function(){
-		console.log("---------------------");
+		spyOn(Rainbow,"color");
 		$httpMock.expectGET('config.json').respond(configjson);
 		$httpMock.expectGET(configjson.restDcJsonFileUrl);
 		ctrl=createController();
 		$httpMock.flush(); 
 		var doc=$scope.dc[0].documents[0];
-		$httpMock.expectPOST($scope.config.baseUrlPrefix+dcjson[0].documents[0].url).respond(404, '',{'bla':'bla','content-type':'application/javascript'});
+		var url=$scope.config.baseUrlPrefix+dcjson[0].documents[0].url;
+		$httpMock.expectPOST(url).respond(response(0));
 		$scope.doMethod("POST",0,0);
 		$httpMock.flush(); 
+		$time.flush();
+		expect(Rainbow.color.calls.length).toEqual(1);
 		console.log($scope.dc[0].documents[0]);
 		expect($scope.dc[0].documents[0].result).toEqual("*****");
 	});
