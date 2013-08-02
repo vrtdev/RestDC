@@ -25,6 +25,7 @@
 		
 	});
 
+	// TODO : fix for Angular unstable
 	if  (!$scope.$$phase) {
 		$scope.$apply();
 	}
@@ -78,11 +79,17 @@
 		}
 		config.data=data;
 		$http(config).success(function(data, status, headers, config){
+			console.log("SUCCESS");
 			insertResults(mydoc.result,data, status, headers, config);
 		}).error(function(data, status, headers, config){
+			console.log("Not so much");
 			insertResults(mydoc.result,data, status, headers, config);
 		});
-		$scope.$apply();
+
+		// TODO : fix for Angular unstable
+		if(!$scope.$$phase) {
+			$scope.$apply();
+		}
 	};
 
 	var insertResults=function(result,data, status, headers, config){
@@ -93,7 +100,7 @@
 		var ctype=header["content-type"].toLowerCase();
 		result.syntax='generic';
 		for(var key in syntax){
-			if(ctype.indexOf(key)>0){
+			if(ctype.indexOf(key)>-1){
 				result.syntax=syntax[key];
 				break;
 			}

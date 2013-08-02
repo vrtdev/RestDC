@@ -73,15 +73,16 @@ describe("DcController", function(){
 		$httpMock.flush();
 		expect($scope.config.baseUrlPrefix).toMatch(/http:\/\/localhost:[0-9]{4}/);
 	});
-	it("should do a request",function(){
+	it("should do a POST request ",function(){
 		console.log("---------------------");
 		$httpMock.expectGET('config.json').respond(configjson);
 		$httpMock.expectGET(configjson.restDcJsonFileUrl);
 		ctrl=createController();
 		$httpMock.flush(); 
 		var doc=$scope.dc[0].documents[0];
-		$httpMock.expectPOST($scope.config.baseUrlPrefix+dcjson[0].documents[0].url).respond(404, '',{'bla':'bla'});
+		$httpMock.expectPOST($scope.config.baseUrlPrefix+dcjson[0].documents[0].url).respond(404, '',{'bla':'bla','content-type':'application/javascript'});
 		$scope.doMethod("POST",0,0);
+		$httpMock.flush(); 
 		console.log($scope.dc[0].documents[0]);
 		expect($scope.dc[0].documents[0].result).toEqual("*****");
 	});
