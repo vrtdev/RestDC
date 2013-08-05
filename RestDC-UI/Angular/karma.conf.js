@@ -78,7 +78,7 @@ junitReporter = {
 };
 
 coverageReporter = {
-        type: 'html',
-		// type : 'lcov',
+        //type: 'html',
+		type : 'lcov',
 		dir : 'target/coverage/'
 };
