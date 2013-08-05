@@ -51,6 +51,11 @@ var dcjson=[
 				"returnType" : { "typeName" : "AbstractContent" },
 				"url" : "/v0_0_1/glyph/{id}"
 			},
+            {
+                "requestMethods" : [ "GET" ],
+                "returnType" : { "typeName" : "AbstractContent" },
+                "url" : "/v0_0_1/glyph"
+            }
 		]
 	}
 ];
@@ -64,7 +69,11 @@ var responses=[
 		code:200,
 		body:{'test':'test'},
 		header:{'content-type':'text/json' }
-	}
+	},
+    {
+        code:200,
+        body:{'test':'test'}
+    }
 ];
 var response=function(n){
 	var res=responses[n];

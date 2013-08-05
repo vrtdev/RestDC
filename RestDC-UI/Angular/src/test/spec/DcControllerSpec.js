@@ -23,8 +23,33 @@ describe("DcController", function(){
 		$httpMock.verifyNoOutstandingRequest();
 	});
 
+    it("should work when no parameters", function(){
+        $httpMock.expectGET('config.json').respond(configjson);
+        $httpMock.expectGET(configjson.restDcJsonFileUrl);
+        ctrl=createController();
+        $httpMock.flush();
+        var doc=$scope.dc[0].documents[2];
+        var url=$scope.config.baseUrlPrefix+dcjson[0].documents[2].url;
+        $httpMock.expectGET(url).respond(response(1));
 
-	it("should load a config and a dc.json", function() { 
+        $scope.doMethod("GET",0,2);
+        $httpMock.flush();
+    })
+
+    it("should work when there is no content-type in the response header",function(){
+        $httpMock.expectGET('config.json').respond(configjson);
+        $httpMock.expectGET(configjson.restDcJsonFileUrl);
+        ctrl=createController();
+        $httpMock.flush();
+        var doc=$scope.dc[0].documents[0];
+        var url=$scope.config.baseUrlPrefix+dcjson[0].documents[0].url;
+        $httpMock.expectPOST(url).respond(response(2));
+        $scope.doMethod("POST",0,0);
+        $httpMock.flush();
+
+    });
+
+	it("should load a config and a dc.json", function() {
 		$httpMock.expectGET('config.json').respond(configjson);
 		$httpMock.expectGET(configjson.restDcJsonFileUrl);
 		ctrl=createController();
@@ -52,14 +77,13 @@ describe("DcController", function(){
 		$httpMock.flush(); 
 		$time.flush();
 		var exp={ 
-			'url' : 'http://localhost:9876//v0_0_1/content', 
+			'url' : 'http://localhost:9876//v0_0_1/content',
 			'body' : '', 
 			'code' : 404, 
 			'syntax' : 'javascript', 
 			'headers' :"bla : bla\ncontent-type : application/javascript\n"
 		};
 		expect(Rainbow.color.calls.length).toEqual(1);
-		console.log($scope.dc[0].documents[0]);
 		expect(JSON.stringify($scope.dc[0].documents[0].result)).toEqual(JSON.stringify(exp));
 	});
 	it("should do a GET request with parameters and url rewriting",function(){
