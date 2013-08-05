@@ -1,4 +1,4 @@
-	function dcCtrl($scope,$http,$timeout){
+	function dcCtrl($scope,$http,$timeout,$document){
 
     	var syntax={"html":"html","javascript":"javascript","jscript":"javascript","json":"javascript"};
 
@@ -24,7 +24,7 @@
 		}
 		
 	});
-
+	console.log($document);
 	// TODO : fix for Angular unstable
 	if  (!$scope.$$phase) {
 		$scope.$apply();

@@ -42,7 +42,7 @@ var dcjson=[
 				},
 				{ 
 					"name" : "test",
-					"parameterLocation" : "PARAM",
+					"parameterLocation" : "PARAMETERS",
 					"required" : true,
 					"type" : { "typeName" : "String" }
 				}	 
@@ -59,6 +59,11 @@ var responses=[
 		code:404,
 		body:"",
 		header:{'bla':'bla','content-type':'application/javascript'}
+	},
+	{
+		code:200,
+		body:{'test':'test'},
+		header:{'content-type':'text/json' }
 	}
 ];
 var response=function(n){
