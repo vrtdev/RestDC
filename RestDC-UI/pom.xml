@@ -15,6 +15,6 @@
     <description>REST DC UI front facing modules</description>
 
     <modules>
-        <module>angular</module>
+        <module>Angular</module>
     </modules>
 </project>
