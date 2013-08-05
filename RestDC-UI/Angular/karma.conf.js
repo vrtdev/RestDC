@@ -72,7 +72,7 @@ captureTimeout = 60000;
 
 // Continuous Integration mode
 // if true, it capture browsers, run tests and exit
-singleRun = false;
+singleRun = true;
 junitReporter = {
 		outputFile: 'target/test-results.xml'
 };

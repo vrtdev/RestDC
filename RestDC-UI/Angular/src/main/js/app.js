@@ -24,7 +24,6 @@
 		}
 		
 	});
-	console.log($document);
 	// TODO : fix for Angular unstable
 	if  (!$scope.$$phase) {
 		$scope.$apply();
