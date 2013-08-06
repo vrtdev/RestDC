@@ -39,6 +39,7 @@
                         </configuration>
                     </execution>
                 </executions>
+                <!--
                 <dependencies>
                     <dependency>
                         <groupId>rubygems</groupId>
@@ -47,6 +48,7 @@
                         <type>gem</type>
                     </dependency>
                 </dependencies>
+                -->
             </plugin>
 
             <plugin>
