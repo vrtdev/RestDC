@@ -16,6 +16,7 @@
     <build>
         <plugins>
             <plugin>
+
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
                 <version>0.29.4</version>
@@ -39,7 +40,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <!--
                 <dependencies>
                     <dependency>
                         <groupId>rubygems</groupId>
@@ -48,7 +48,6 @@
                         <type>gem</type>
                     </dependency>
                 </dependencies>
-                -->
             </plugin>
 
             <plugin>
@@ -110,21 +109,5 @@
 
     </build>
 
-    <repositories>
-        <repository>
-            <id>rubygems-proxy</id>
-            <name>Rubygems Proxy</name>
-            <url>http://rubygems-proxy.torquebox.org/releases</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-
-    </repositories>
 
 </project>
