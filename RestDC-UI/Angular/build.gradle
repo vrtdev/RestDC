@@ -1,0 +1,41 @@
+apply plugin: 'compass'
+apply plugin: 'base'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'http://dl.bintray.com/robfletcher/gradle-plugins' }
+    }
+    dependencies {
+        classpath 'org.gradle.plugins:gradle-compass:1.0.7'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def spAppSources = fileTree('src/main') {
+    include '**/*.css'
+    include '**/*.js'
+    include '**/*.html'
+    include '**/*.json'
+    exclude 'sass/'
+
+}
+
+compass {
+    cssDir = file("$buildDir/stylesheets")
+    sassDir = file('src/main/sass')
+}
+
+
+
+
+task build(overwrite: true, type: Zip, dependsOn: compileSass) {
+    from spAppSources
+    into('stylesheets') {
+        from compass.cssDir
+    }
+}
+

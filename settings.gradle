@@ -1,0 +1,1 @@
+include "RestDC-API", "RestDC-UI", "RestDC-jax-rs", "RestDC-spring", "RestDC-UI:angular"

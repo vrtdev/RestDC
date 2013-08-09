@@ -1,0 +1,4 @@
+dependencies {
+    compile libraries.reflections
+    compile libraries.slf4j
+}
