@@ -1,3 +1,3 @@
 #!/bin/bash
-/usr/local/bin/npm install
+sudo /usr/local/bin/npm install
 karma start --single-run
