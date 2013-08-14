@@ -1,4 +1,5 @@
 {
+    "name": "npm" ,
     "devDependencies": {
         "karma": "~0.10.1",
         "karma-coverage": "~0.1.0",
