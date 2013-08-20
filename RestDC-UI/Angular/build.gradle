@@ -1,5 +1,4 @@
 apply plugin: 'compass'
-apply plugin: 'base'
 
 buildscript {
     repositories {
@@ -20,6 +19,7 @@ def spAppSources = fileTree('src/main') {
     include '**/*.js'
     include '**/*.html'
     include '**/*.json'
+    include 'font/**/*'
     exclude 'sass/'
 
 }
@@ -29,13 +29,26 @@ compass {
     sassDir = file('src/main/sass')
 }
 
+task npmInstall(type: Exec) {
+    commandLine 'npm', 'install'
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
 
+task test(type: Exec, dependsOn: npmInstall) {
+    commandLine './node_modules/karma/bin/karma', 'start', '--single-run'
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
 
-
-task build(overwrite: true, type: Zip, dependsOn: compileSass) {
+task build(overwrite: true, type: Zip, dependsOn: [compileSass, test]) {
     from spAppSources
     into('stylesheets') {
         from compass.cssDir
     }
 }
+
+
 

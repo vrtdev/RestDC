@@ -102,7 +102,7 @@
                                 <argument>-w</argument>
                                 <argument>${basedir}</argument>
                             </arguments>
-                            <executable>${basedir}/src/main/scripts/jenkins/prepare-coverage-sonar.sh</executable>
+                            <executable>${basedir}/src/scripts/jenkins/prepare-coverage-sonar.sh</executable>
                         </configuration>
                     </execution>
                 </executions>
