@@ -55,12 +55,12 @@
 
     <distributionManagement>
         <repository>
-            <id>vrt.releases</id>
+            <id>deployment</id>
             <name>VRT Nexus Release repo</name>
             <url>http://poprod01.servers.vrt.be:8081/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>vrt.snapshots</id>
+            <id>deployment</id>
             <name>VRT Nexus Release repo</name>
             <url>http://poprod01.servers.vrt.be:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>

@@ -68,20 +68,22 @@
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>com.kelveden</groupId>
-                <artifactId>maven-karma-plugin</artifactId>
-                <version>1.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
                 <executions>
                     <execution>
+                        <phase>test</phase>
                         <goals>
-                            <goal>start</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>${basedir}/runKarma.sh</executable>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <browsers>PhantomJS</browsers>
-                </configuration>
             </plugin>
 
             <plugin>
