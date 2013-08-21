@@ -2,13 +2,16 @@ apply plugin: 'compass'
 
 buildscript {
     repositories {
-        mavenCentral()
-        maven { url 'http://dl.bintray.com/robfletcher/gradle-plugins' }
+        mavenLocal()
+        maven {
+            url "http://poprod01.servers.vrt.be:8081/nexus/content/groups/public"
+        }
     }
     dependencies {
         classpath 'org.gradle.plugins:gradle-compass:1.0.7'
     }
 }
+
 
 def spAppSources = fileTree('src/main') {
     include '**/*.css'
