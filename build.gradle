@@ -20,19 +20,19 @@ ext {
 subprojects {
     apply plugin: 'base'
 
+    repositories {
+        mavenLocal()
+        maven {
+            url "http://poprod01.servers.vrt.be:8081/nexus/content/groups/public"
+        }
+
+    }
+
     if (project in javaProjects) {
         apply plugin: 'java'
         sourceCompatibility = '1.7'
         group = 'be.vrt.web.rest-dc'
         version = '1.0-SNAPSHOT'
-
-        repositories {
-            mavenLocal()
-            maven {
-                url "http://poprod01.servers.vrt.be:8081/nexus/content/groups/public"
-            }
-
-        }
 
         dependencies {
             testCompile libraries.junit

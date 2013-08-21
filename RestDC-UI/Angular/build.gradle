@@ -10,10 +10,6 @@ buildscript {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 def spAppSources = fileTree('src/main') {
     include '**/*.css'
     include '**/*.js'
