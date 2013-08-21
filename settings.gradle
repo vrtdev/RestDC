@@ -1,1 +1,1 @@
-include "RestDC-API", "RestDC-jax-rs", "RestDC-spring", "RestDC-UI:angular"
+include "RestDC-API", "RestDC-jax-rs", "RestDC-spring", "RestDC-UI:Angular"
