@@ -17,22 +17,39 @@ ext {
     javaProjects = subprojects.findAll { it.name in javaProjectsNames }
 }
 
-subprojects {
+allprojects {
     apply plugin: 'base'
+    apply plugin: 'maven'
 
+    version = '1.0-SNAPSHOT'
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "http://poprod01.servers.vrt.be:8081/nexus/content/repositories/releases") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+                snapshotRepository(url: "http://poprod01.servers.vrt.be:8081/nexus/content/repositories/snapshots") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+            }
+        }
+    }
+}
+
+subprojects {
     repositories {
         mavenLocal()
         maven {
             url "http://poprod01.servers.vrt.be:8081/nexus/content/groups/public"
         }
-
     }
 
     if (project in javaProjects) {
         apply plugin: 'java'
         sourceCompatibility = '1.7'
         group = 'be.vrt.web.rest-dc'
-        version = '1.0-SNAPSHOT'
+
 
         dependencies {
             testCompile libraries.junit
@@ -64,7 +81,11 @@ subprojects {
             archives sourcesJar
             archives javadocJar
         }
+    } else {
+        group = 'be.vrt.web.rest-dc.ui'
     }
+
+
 }
 
 
