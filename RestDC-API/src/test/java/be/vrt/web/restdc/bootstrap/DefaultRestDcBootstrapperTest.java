@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.*;
 
 /**
  * @author Mike Seghers

@@ -1,8 +1,10 @@
 package be.vrt.web.restdc.domain;
 
+import java.util.Objects;
+
 /**
- * A parameter represent an argument that can be past to a REST API call. It holds information on the parameter's name,
- * descripition, type, location and whether the parameter is optional or not.
+ * A parameter represents an argument that can be past to a REST API call. It holds information on the parameter's name,
+ * description, type, location and whether the parameter is optional or not.
  * <p/>
  * To create instances of this class, you'll need to use it's builder: {@link be.vrt.web.restdc.domain.Parameter.ParameterBuilder}
  *
@@ -50,13 +52,8 @@ public class Parameter {
 
     @Override
     public String toString() {
-        return "Parameter{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", type=" + type +
-                ", parameterLocation=" + parameterLocation +
-                ", required=" + required +
-                '}';
+        return com.google.common.base.Objects.toStringHelper(this).add("name", name).add("description", description).add("type", type).add("parameterLocation", parameterLocation)
+                                     .add("required", required).toString();
     }
 
     @Override
@@ -69,32 +66,13 @@ public class Parameter {
         }
 
         Parameter parameter = (Parameter) o;
-
-        if (required != parameter.required) {
-            return false;
-        }
-        if (description != null ? !description.equals(parameter.description) : parameter.description != null) {
-            return false;
-        }
-        if (name != null ? !name.equals(parameter.name) : parameter.name != null) {
-            return false;
-        }
-        if (parameterLocation != parameter.parameterLocation) {
-            return false;
-        }
-        if (!type.equals(parameter.type)) {
-            return false;
-        }
-
-        return true;
+        return required == parameter.required && Objects.equals(description, parameter.description) && Objects
+                .equals(name, parameter.name) && parameterLocation == parameter.parameterLocation && Objects.equals(type, parameter.type);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = HASH_PRIME * result + (description != null ? description.hashCode() : 0);
-        result = HASH_PRIME * result + type.hashCode();
-        result = HASH_PRIME * result + parameterLocation.hashCode();
+        int result = Objects.hash(name, description, type, parameterLocation);
         result = HASH_PRIME * result + (required ? 1 : 0);
         return result;
     }
@@ -111,7 +89,20 @@ public class Parameter {
         private boolean required;
 
         /**
+         * Construct a new builder, adding required properties.
+         *
+         * @param type the type
+         */
+        public ParameterBuilder(final Type type) {
+            if (type == null) {
+                throw new IllegalArgumentException("You should provide a non-null type to the ParameterBuilder");
+            }
+            this.type = type;
+        }
+
+        /**
          * Add the given name to the builder
+         *
          * @param name the name
          * @return this builder
          */
@@ -122,6 +113,7 @@ public class Parameter {
 
         /**
          * Add the given description to the builder
+         *
          * @param description the description
          * @return this builder
          */
@@ -131,17 +123,8 @@ public class Parameter {
         }
 
         /**
-         * Add the given type to the builder
-         * @param type the type
-         * @return this builder
-          */
-        public ParameterBuilder withType(final Type type) {
-            this.type = type;
-            return this;
-        }
-
-        /**
          * Add the given parameter location to the builder
+         *
          * @param parameterLocation the parameter location
          * @return this builder
          */
@@ -152,6 +135,7 @@ public class Parameter {
 
         /**
          * Add the given required flag to the builder
+         *
          * @param required the required flag
          * @return this builder
          */
@@ -162,6 +146,7 @@ public class Parameter {
 
         /**
          * Builds the Parameter
+         *
          * @return the build Parameter
          */
         public Parameter build() {

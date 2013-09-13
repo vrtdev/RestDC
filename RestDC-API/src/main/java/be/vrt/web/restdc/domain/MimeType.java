@@ -1,5 +1,7 @@
 package be.vrt.web.restdc.domain;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,16 +55,9 @@ public final class MimeType {
      * @param fileExtensions    the file extension(s) for this MimeType
      */
     private MimeType(final String internetMediaType, final String... fileExtensions) {
-        if (internetMediaType == null || internetMediaType.trim().length() == 0) {
-            throw new IllegalArgumentException("You should provide a valid internet media type for a mime type!");
-        }
+        Preconditions.checkArgument(internetMediaType != null && internetMediaType.trim().length() != 0, "You should provide a valid internet media type for a mime type!");
 
-        if (fileExtensions == null) {
-            this.fileExtensions = new String[0];
-        } else {
-            this.fileExtensions = fileExtensions;
-        }
-
+        this.fileExtensions = fileExtensions;
         this.internetMediaType = internetMediaType;
 
     }
@@ -98,7 +93,7 @@ public final class MimeType {
      * @return the preferred file extension
      */
     public String getPreferredFileExtension() {
-        return fileExtensions[0];
+        return (fileExtensions.length == 0 ? null : fileExtensions[0]);
     }
 
     @Override

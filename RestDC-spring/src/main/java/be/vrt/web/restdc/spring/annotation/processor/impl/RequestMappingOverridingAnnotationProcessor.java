@@ -6,7 +6,6 @@ import be.vrt.web.restdc.domain.Parameter;
 import be.vrt.web.restdc.domain.ParameterLocation;
 import be.vrt.web.restdc.domain.RequestMethod;
 import be.vrt.web.restdc.domain.ResourceDocument;
-import be.vrt.web.restdc.domain.Type;
 import be.vrt.web.restdc.reflection.TypeReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,8 +59,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             if (baseAnnotation.value().length > 0) {
                 baseUrl = baseAnnotation.value()[0];
             }
-            builder.addConsumingMimeTypesWithStrings(baseAnnotation.consumes())
-                   .addProducingMimeTypesWithStrings(baseAnnotation.produces());
+            builder.addConsumingMimeTypesWithStrings(baseAnnotation.consumes()).addProducingMimeTypesWithStrings(baseAnnotation.produces());
             defaultMethods = baseAnnotation.method();
         }
         LOGGER.debug("Calculated base URL for base origin {} is \"{}\">", baseOrigin, baseUrl);
@@ -85,10 +78,8 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             mappedRequestMethods.add(RequestMethod.valueOf(requestMethod.name()));
         }
 
-        builder.addAllRequestMethods(mappedRequestMethods)
-               .withReturnType(TypeReflectionUtil.getTypeFromReflectionType(origin.getGenericReturnType()))
-               .addConsumingMimeTypesWithStrings(annotation.consumes())
-               .addProducingMimeTypesWithStrings(annotation.produces());
+        builder.addAllRequestMethods(mappedRequestMethods).withReturnType(TypeReflectionUtil.getTypeFromReflectionType(origin.getGenericReturnType()))
+               .addConsumingMimeTypesWithStrings(annotation.consumes()).addProducingMimeTypesWithStrings(annotation.produces());
 
         if (annotation.value().length == 0) {
             builder.withUrl(baseUrl);
@@ -113,8 +104,8 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
                 Parameter parameter = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i], parametersNames[i]);
                 if (parameter.getName() == null && parameter.getParameterLocation() != ParameterLocation.BODY) {
                     LOGGER.warn("A parameter was build without a name, Spring's auto-discovery apparently was unable to " +
-                            "get parameter names, and you didn't specify a specific name in the annotation on the parameter. " +
-                            "Your documentation might not be clear to the user!\nTo give you some context, here is the method information: {}", requestMappingMethod);
+                                        "get parameter names, and you didn't specify a specific name in the annotation on the parameter. " +
+                                        "Your documentation might not be clear to the user!\nTo give you some context, here is the method information: {}", requestMappingMethod);
                 }
 
                 builder.addParameter(parameter);
@@ -124,7 +115,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
 
     private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final java.lang.reflect.Type genericParameterType, final String nameFromDiscovery) {
         LOGGER.trace("Building parameter with discover name \"{}\" based on annotations:\n{}", nameFromDiscovery, specificParameterAnnotations);
-        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder();
+        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
         ParameterLocation location = null;
         boolean required = true;
         String name = nameFromDiscovery;
@@ -150,9 +141,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             }
         }
 
-        Parameter parameter = builder.withName(name).withParameterLocation(location)
-                                     .withType(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType)).isRequired(required)
-                                     .build();
+        Parameter parameter = builder.withName(name).withParameterLocation(location).isRequired(required).build();
         LOGGER.trace("Done filling parameter based on annotations:\n{}", parameter);
         return parameter;
     }
@@ -160,7 +149,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
     private String[] getBoundSafeMethodNames(final Method requestMappingMethod, final java.lang.reflect.Type[] genericParameterTypes) {
         String[] parameterNames = parameterNameDiscoverer.getParameterNames(requestMappingMethod);
         if (parameterNames == null) {
-            LOGGER.trace("Parameter names could not be discoverd, defaulting to NULL parameter names");
+            LOGGER.trace("Parameter names could not be discovered, defaulting to NULL parameter names");
             parameterNames = new String[genericParameterTypes.length];
         }
         return parameterNames;

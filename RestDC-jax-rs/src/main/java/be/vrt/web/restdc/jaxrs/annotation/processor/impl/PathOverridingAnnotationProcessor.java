@@ -140,7 +140,7 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
 
     private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final java.lang.reflect.Type genericParameterType) {
         LOGGER.trace("Building parameter based on annotations:\n{}", specificParameterAnnotations);
-        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder();
+        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
         ParameterLocation location = null;
         boolean required = true;
         String name = null;
@@ -170,7 +170,6 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
         }
 
         Parameter parameter = builder.withName(name).withParameterLocation(location)
-                                     .withType(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType))
                                      .isRequired(required).build();
         LOGGER.trace("Done filling parameter based on annotations:\n{}", parameter);
         return parameter;

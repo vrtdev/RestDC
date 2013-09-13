@@ -18,6 +18,7 @@ public final class TypeReflectionUtil {
 
     private static String getActualTypeName(final java.lang.reflect.Type type) {
         String result = null;
+
         if (type instanceof Class) {
             result = ((Class) type).getSimpleName();
         } else if (type instanceof ParameterizedType) {
@@ -51,19 +52,67 @@ public final class TypeReflectionUtil {
                 strings.add(getActualTypeName(actType));
             }
             result = strings.toArray(new String[strings.size()]);
+        } else if (type instanceof Class) {
+            List<String> strings = new ArrayList<>();
+            for (TypeVariable tv : ((Class) type).getTypeParameters()) {
+                strings.add(getActualTypeName(tv));
+            }
+            result = strings.toArray(new String[strings.size()]);
         }
         return result;
     }
 
+    /**
+     * Returns a RestDC Type based on a java type.
+     *
+     * @param reflectionType The java type
+     * @return the RestDC type
+     */
     public static Type getTypeFromReflectionType(final java.lang.reflect.Type reflectionType) {
-        Type.TypeBuilder builder = new Type.TypeBuilder();
-        if (reflectionType instanceof Class) {
-            builder.withTypeName(((Class) reflectionType).getSimpleName());
-        } else if (reflectionType instanceof ParameterizedType) {
-            builder.withTypeName(getActualTypeName(reflectionType));
+        Type.TypeBuilder builder = new Type.TypeBuilder(getActualTypeName(reflectionType));
+        if (reflectionType instanceof ParameterizedType || reflectionType instanceof Class) {
             builder.withGenericTypeNames(getActualGenericTypeName(reflectionType));
         }
 
         return builder.build();
     }
+
+
+    private interface ReflectiveTypeHandler<T extends java.lang.reflect.Type> {
+        String getActualTypeName(T type);
+        String[] getActualGenericTypeName(T type);
+    }
+
+    private class ClassHandler implements ReflectiveTypeHandler<Class<?>> {
+        @Override
+        public String getActualTypeName(final Class<?> type) {
+            return type.getSimpleName();
+        }
+
+        @Override
+        public String[] getActualGenericTypeName(final Class<?> type) {
+            List<String> strings = new ArrayList<>();
+            for (TypeVariable tv : type.getTypeParameters()) {
+                strings.add(TypeReflectionUtil.getActualTypeName(tv));
+            }
+            return strings.toArray(new String[strings.size()]);
+        }
+    }
+
+    private class ParameterizedTypeHandler implements ReflectiveTypeHandler<ParameterizedType> {
+        @Override
+        public String getActualTypeName(final ParameterizedType type) {
+            return TypeReflectionUtil.getActualTypeName(type.getRawType());
+        }
+
+        @Override
+        public String[] getActualGenericTypeName(ParameterizedType type) {
+            List<String> strings = new ArrayList<>();
+            for (java.lang.reflect.Type actType : type.getActualTypeArguments()) {
+                strings.add(TypeReflectionUtil.getActualTypeName(actType));
+            }
+            return strings.toArray(new String[strings.size()]);
+        }
+    }
+
 }

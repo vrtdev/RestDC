@@ -28,6 +28,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <logback.version>1.0.13</logback.version>
         <jax-rs-api.version>1.1.1</jax-rs-api.version>
+        <guava.version>15.0</guava.version>
     </properties>
 
     <name>RestDC Parent project</name>
@@ -83,6 +84,13 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>rest-dc-jax-rs</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- General utility frameworks -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
             <!-- Dependency management for the spring module -->
@@ -152,6 +160,13 @@
                 <version>${logback.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava-testlib</artifactId>
+                <version>${guava.version}</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

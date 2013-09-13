@@ -1,6 +1,10 @@
 package be.vrt.web.restdc.domain;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A type holds type information on return and parameter values in a REST API.
@@ -27,10 +31,7 @@ public class Type {
 
     @Override
     public String toString() {
-        return "Type{" +
-                "typeName='" + typeName + '\'' +
-                ", genericTypeNames=" + Arrays.toString(genericTypeNames) +
-                '}';
+        return com.google.common.base.Objects.toStringHelper(this).add("typeName", typeName).add("genericTypeNames", "[" + Joiner.on(',').skipNulls().join(genericTypeNames) + "]").toString();
     }
 
     @Override
@@ -43,22 +44,12 @@ public class Type {
         }
 
         Type type = (Type) o;
-
-        if (!Arrays.equals(genericTypeNames, type.genericTypeNames)) {
-            return false;
-        }
-        if (!typeName.equals(type.typeName)) {
-            return false;
-        }
-
-        return true;
+        return Arrays.equals(genericTypeNames, type.genericTypeNames) && Objects.equals(typeName, type.typeName);
     }
 
     @Override
     public int hashCode() {
-        int result = typeName.hashCode();
-        result = HASH_PRIME * result + (genericTypeNames != null ? Arrays.hashCode(genericTypeNames) : 0);
-        return result;
+        return Objects.hash(typeName) * HASH_PRIME + Arrays.hashCode(genericTypeNames);
     }
 
     /**
@@ -69,17 +60,18 @@ public class Type {
         private String[] genericTypeNames;
 
         /**
-         * Adds a type name to the builder.
-         * @param typeName the type name
-         * @return this builder
+         * Construct a new builder, adding required properties.
+         *
+         * @param typeName the name of the type
          */
-        public TypeBuilder withTypeName(final String typeName) {
+        public TypeBuilder(final String typeName) {
+            Preconditions.checkArgument(typeName != null && typeName.trim().length() != 0, "You should provide a valid (non-null, non-blank) type name to the TypeBuilder");
             this.typeName = typeName;
-            return this;
         }
 
         /**
          * Adds generic type names to the builder.
+         *
          * @param genericTypeNames the generuc type names
          * @return this builder
          */
@@ -90,10 +82,11 @@ public class Type {
 
         /**
          * Builds the {@link Type}
+         *
          * @return the build type
          */
         public Type build() {
-            return new Type(typeName, genericTypeNames);
+            return new Type(typeName, genericTypeNames == null ? new String[0] : genericTypeNames);
         }
     }
 }
