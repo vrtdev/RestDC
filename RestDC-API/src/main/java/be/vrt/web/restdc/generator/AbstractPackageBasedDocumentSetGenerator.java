@@ -1,4 +1,4 @@
-package be.vrt.web.restdc;
+package be.vrt.web.restdc.generator;
 
 import be.vrt.web.restdc.annotation.processor.AnnotationProcessor;
 import be.vrt.web.restdc.domain.DocumentSet;
@@ -48,13 +48,13 @@ public abstract class AbstractPackageBasedDocumentSetGenerator<T extends Annotat
         LOGGER.trace("Generating DocumentSet with classes {} for base package {}", classes, basePackageName);
         DocumentSet.DocumentSetBuilder builder = new DocumentSet.DocumentSetBuilder(getIdPrefix() + " in package " + basePackageName);
         List<ResourceDocument> documentsForClass;
-        for (Class<?> pathAnnotatedClass : classes) {
-            T annotation = pathAnnotatedClass.getAnnotation(annotationType);
-            documentsForClass = annotationProcessor.process(annotation, pathAnnotatedClass);
+        for (Class<?> annotatedClass : classes) {
+            T annotation = annotatedClass.getAnnotation(annotationType);
+            documentsForClass = annotationProcessor.process(annotation, annotatedClass);
             if (documentsForClass != null) {
                 builder.addAll(documentsForClass);
             } else {
-                LOGGER.debug("No document resources found for class {}", pathAnnotatedClass);
+                LOGGER.debug("No document resources found for class {}", annotatedClass);
             }
         }
 

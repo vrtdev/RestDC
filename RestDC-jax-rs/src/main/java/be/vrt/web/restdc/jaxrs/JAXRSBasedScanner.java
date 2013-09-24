@@ -1,6 +1,6 @@
 package be.vrt.web.restdc.jaxrs;
 
-import be.vrt.web.restdc.AbstractPackageBasedDocumentSetGenerator;
+import be.vrt.web.restdc.generator.AbstractPackageBasedDocumentSetGenerator;
 import be.vrt.web.restdc.annotation.processor.AnnotationProcessor;
 import be.vrt.web.restdc.domain.ResourceDocument;
 

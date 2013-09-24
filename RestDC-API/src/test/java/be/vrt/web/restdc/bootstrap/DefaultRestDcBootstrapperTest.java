@@ -1,6 +1,6 @@
 package be.vrt.web.restdc.bootstrap;
 
-import be.vrt.web.restdc.DocumentSetGenerator;
+import be.vrt.web.restdc.generator.DocumentSetGenerator;
 import be.vrt.web.restdc.domain.DocumentSet;
 import be.vrt.web.restdc.store.DocumentSetStore;
 import org.junit.Before;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 /**
  * @author Mike Seghers

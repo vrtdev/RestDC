@@ -1,13 +1,13 @@
 package be.vrt.web.restdc.bootstrap;
 
-import be.vrt.web.restdc.DocumentSetGenerator;
+import be.vrt.web.restdc.generator.DocumentSetGenerator;
 import be.vrt.web.restdc.store.DocumentSetStore;
 
 import java.util.List;
 
 /**
  * Default rest dc bootstrapper implementation. This implementation loads {@link be.vrt.web.restdc.domain.DocumentSet}s
- * from the configured list of {@link be.vrt.web.restdc.DocumentSetGenerator}s and stores them in the configured {@link
+ * from the configured list of {@link be.vrt.web.restdc.generator.DocumentSetGenerator}s and stores them in the configured {@link
  * be.vrt.web.restdc.store.DocumentSetStore}.
  *
  * @author Mike Seghers
