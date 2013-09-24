@@ -42,9 +42,9 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
     }
 
     @Override
-    public ResourceDocument process(final RequestMapping annotation, final Method origin, final RequestMapping baseAnnotation, final Class<?> baseOrigin) {
+    public ResourceDocument process(final RequestMapping annotation, final Method annotatedElement, final RequestMapping baseAnnotation, final Class<?> baseOrigin) {
         LOGGER.trace("Processing RequestMapping {} with base {}", annotation, baseAnnotation);
-        RestDescription descriptionAnnotation = origin.getAnnotation(RestDescription.class);
+        RestDescription descriptionAnnotation = annotatedElement.getAnnotation(RestDescription.class);
 
         ResourceDocument.ResourceDocumentBuilder builder = new ResourceDocument.ResourceDocumentBuilder();
         String description = null;
@@ -52,7 +52,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             description = descriptionAnnotation.value();
         }
         builder.withDescription(description);
-        LOGGER.trace("Calculated description for element {} is \"{}\">", origin, description);
+        LOGGER.trace("Calculated description for element {} is \"{}\">", annotatedElement, description);
         String baseUrl = "";
         org.springframework.web.bind.annotation.RequestMethod[] defaultMethods = null;
         if (baseAnnotation != null) {
@@ -78,7 +78,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             mappedRequestMethods.add(RequestMethod.valueOf(requestMethod.name()));
         }
 
-        builder.addAllRequestMethods(mappedRequestMethods).withReturnType(TypeReflectionUtil.getTypeFromReflectionType(origin.getGenericReturnType()))
+        builder.addAllRequestMethods(mappedRequestMethods).withReturnType(TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType()))
                .addConsumingMimeTypesWithStrings(annotation.consumes()).addProducingMimeTypesWithStrings(annotation.produces());
 
         if (annotation.value().length == 0) {
@@ -87,7 +87,7 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
             builder.withUrl(new StringBuilder(baseUrl).append(annotation.value()[0]).toString());
         }
 
-        addParametersForMethod(builder, origin);
+        addParametersForMethod(builder, annotatedElement);
         ResourceDocument resourceDocument = builder.build();
         LOGGER.debug("Build ResourceDocument {}", resourceDocument);
         return resourceDocument;

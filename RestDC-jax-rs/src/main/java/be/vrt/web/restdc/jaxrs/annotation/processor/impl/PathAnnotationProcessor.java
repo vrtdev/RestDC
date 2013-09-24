@@ -26,10 +26,10 @@ public class PathAnnotationProcessor implements AnnotationProcessor<Path, List<R
     }
 
     @Override
-    public List<ResourceDocument> process(final Path pathAnnotation, final Class<?> origin) {
-        LOGGER.debug("Generating resource documents for class {}", origin);
-        Path classLevelRequestMapping = origin.getAnnotation(Path.class);
-        Set<Method> allPathMethods = ReflectionUtils.getAllMethods(origin, ReflectionUtils.withAnnotation(Path.class));
+    public List<ResourceDocument> process(final Path pathAnnotation, final Class<?> annotatedElement) {
+        LOGGER.debug("Generating resource documents for class {}", annotatedElement);
+        Path classLevelRequestMapping = annotatedElement.getAnnotation(Path.class);
+        Set<Method> allPathMethods = ReflectionUtils.getAllMethods(annotatedElement, ReflectionUtils.withAnnotation(Path.class));
         List<ResourceDocument> result;
         if (allPathMethods.size() == 0) {
             result = null;
@@ -38,11 +38,11 @@ public class PathAnnotationProcessor implements AnnotationProcessor<Path, List<R
             for (Method requestMappingMethod : allPathMethods) {
                 Path methodLevelPath = requestMappingMethod.getAnnotation(Path.class);
                 result.add(pathAnnotationProcessor
-                        .process(methodLevelPath, requestMappingMethod, classLevelRequestMapping, origin));
+                        .process(methodLevelPath, requestMappingMethod, classLevelRequestMapping, annotatedElement));
             }
         }
 
-        LOGGER.debug("Done generating DocumentSets for class {}: {}", origin, result);
+        LOGGER.debug("Done generating DocumentSets for class {}: {}", annotatedElement, result);
         return result;
     }
 }

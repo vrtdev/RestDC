@@ -3,6 +3,7 @@ package be.vrt.web.restdc.generator;
 import be.vrt.web.restdc.annotation.processor.AnnotationProcessor;
 import be.vrt.web.restdc.domain.DocumentSet;
 import be.vrt.web.restdc.domain.ResourceDocument;
+import be.vrt.web.restdc.generator.impl.AbstractPackageBasedDocumentSetGenerator;
 import be.vrt.web.restdc.test.SimpleAnnotatedClass;
 import org.junit.Before;
 import org.junit.Test;

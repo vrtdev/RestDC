@@ -1,6 +1,7 @@
 package be.vrt.web.restdc.bootstrap;
 
 /**
+ * A bootstrapper launches REST DC's document generator.
  *
  * @author Mike Seghers
  */

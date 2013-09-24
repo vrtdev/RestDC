@@ -6,9 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Mike Seghers
@@ -51,7 +49,7 @@ public final class TypeReflectionUtil {
         return result;
     }
 
-    private static <T extends java.lang.reflect.Type>  String[] getActualGenericTypeName(final T type) {
+    private static <T extends java.lang.reflect.Type> String[] getActualGenericTypeName(final T type) {
         ReflectiveTypeHandler<T> reflectiveTypeHandler = getReflectiveTypeHandler(type);
         String[] result = null;
         if (reflectiveTypeHandler != null) {
@@ -60,11 +58,11 @@ public final class TypeReflectionUtil {
         return result;
     }
 
-    private static <T extends java.lang.reflect.Type> ReflectiveTypeHandler<T> getReflectiveTypeHandler(T type) {
+    private static <T extends java.lang.reflect.Type> ReflectiveTypeHandler<T> getReflectiveTypeHandler(final T type) {
         ReflectiveTypeHandler<T> result = null;
         for (ReflectiveTypeHandler<?> handler : reflectiveTypeHandlers) {
             if (handler.accept(type)) {
-                result = (ReflectiveTypeHandler<T>)handler;
+                result = (ReflectiveTypeHandler<T>) handler;
                 break;
             }
         }
@@ -72,12 +70,21 @@ public final class TypeReflectionUtil {
     }
 
 
+    /**
+     * A reflective type handler is capable of generating REST DC specific type information for a java type.
+     * @param <T> the java type
+     */
     private interface ReflectiveTypeHandler<T extends java.lang.reflect.Type> {
         String getActualTypeName(T type);
+
         String[] getActualGenericTypeName(T type);
+
         boolean accept(java.lang.reflect.Type type);
     }
 
+    /**
+     * Class handling type handler.
+     */
     private static class ClassHandler implements ReflectiveTypeHandler<Class<?>> {
         @Override
         public String getActualTypeName(final Class<?> type) {
@@ -94,11 +101,14 @@ public final class TypeReflectionUtil {
         }
 
         @Override
-        public boolean accept(java.lang.reflect.Type type) {
+        public boolean accept(final java.lang.reflect.Type type) {
             return (type instanceof Class);
         }
     }
 
+    /**
+     * ParameterizedType handling type handler.
+     */
     private static class ParameterizedTypeHandler implements ReflectiveTypeHandler<ParameterizedType> {
         @Override
         public String getActualTypeName(final ParameterizedType type) {
@@ -106,7 +116,7 @@ public final class TypeReflectionUtil {
         }
 
         @Override
-        public String[] getActualGenericTypeName(ParameterizedType type) {
+        public String[] getActualGenericTypeName(final ParameterizedType type) {
             List<String> strings = new ArrayList<>();
             for (java.lang.reflect.Type actType : type.getActualTypeArguments()) {
                 strings.add(TypeReflectionUtil.getActualTypeName(actType));
@@ -115,11 +125,14 @@ public final class TypeReflectionUtil {
         }
 
         @Override
-        public boolean accept(java.lang.reflect.Type type) {
+        public boolean accept(final java.lang.reflect.Type type) {
             return (type instanceof ParameterizedType);
         }
     }
 
+    /**
+     * TypeVariable handling type handler.
+     */
     private static class TypeVariableTypeHandler implements ReflectiveTypeHandler<TypeVariable<?>> {
         @Override
         public String getActualTypeName(final TypeVariable<?> type) {
@@ -132,19 +145,22 @@ public final class TypeReflectionUtil {
         }
 
         @Override
-        public String[] getActualGenericTypeName(TypeVariable<?> type) {
+        public String[] getActualGenericTypeName(final TypeVariable<?> type) {
             return new String[0];
         }
 
         @Override
-        public boolean accept(java.lang.reflect.Type type) {
+        public boolean accept(final java.lang.reflect.Type type) {
             return type instanceof TypeVariable;
         }
     }
 
-    private static class WildcardTypeTypeHandler implements  ReflectiveTypeHandler<WildcardType> {
+    /**
+     * WildcardType handling type handler.
+     */
+    private static class WildcardTypeTypeHandler implements ReflectiveTypeHandler<WildcardType> {
         @Override
-        public String getActualTypeName(WildcardType type) {
+        public String getActualTypeName(final WildcardType type) {
             java.lang.reflect.Type[] upperBounds = type.getUpperBounds();
             java.lang.reflect.Type[] lowerBounds = type.getLowerBounds();
             String result;
@@ -157,12 +173,12 @@ public final class TypeReflectionUtil {
         }
 
         @Override
-        public String[] getActualGenericTypeName(WildcardType type) {
+        public String[] getActualGenericTypeName(final WildcardType type) {
             return new String[0];
         }
 
         @Override
-        public boolean accept(java.lang.reflect.Type type) {
+        public boolean accept(final java.lang.reflect.Type type) {
             return type instanceof WildcardType;
         }
     }

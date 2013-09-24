@@ -28,11 +28,11 @@ public class ControllerAnnotationProcessor implements AnnotationProcessor<Contro
     }
 
     @Override
-    public List<ResourceDocument> process(final Controller controllerAnnotation, final Class<?> origin) {
-        LOGGER.debug("Generating resource documents for class {}", origin);
-        RequestMapping classLevelRequestMapping = origin.getAnnotation(RequestMapping.class);
+    public List<ResourceDocument> process(final Controller controllerAnnotation, final Class<?> annotatedElement) {
+        LOGGER.debug("Generating resource documents for class {}", annotatedElement);
+        RequestMapping classLevelRequestMapping = annotatedElement.getAnnotation(RequestMapping.class);
         Set<Method> allRequestMappingMethods = ReflectionUtils
-                .getAllMethods(origin, ReflectionUtils.withAnnotation(RequestMapping.class));
+                .getAllMethods(annotatedElement, ReflectionUtils.withAnnotation(RequestMapping.class));
         List<ResourceDocument> result;
         if (allRequestMappingMethods.size() == 0) {
             result = null;
@@ -41,11 +41,11 @@ public class ControllerAnnotationProcessor implements AnnotationProcessor<Contro
             for (Method requestMappingMethod : allRequestMappingMethods) {
                 RequestMapping methodRequestMapping = requestMappingMethod.getAnnotation(RequestMapping.class);
                 result.add(requestMappingAnnotationProcessor
-                        .process(methodRequestMapping, requestMappingMethod, classLevelRequestMapping, origin));
+                        .process(methodRequestMapping, requestMappingMethod, classLevelRequestMapping, annotatedElement));
             }
         }
 
-        LOGGER.debug("Done generating DocumentSets for class {}: {}", origin, result);
+        LOGGER.debug("Done generating DocumentSets for class {}: {}", annotatedElement, result);
         return result;
     }
 }

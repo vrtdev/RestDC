@@ -30,7 +30,8 @@ public class ResourceDocument {
 
     private Type returnType;
 
-    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description, final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes, final List<Parameter> parameters, final Type returnType) {
+    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description, final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes,
+                             final List<Parameter> parameters, final Type returnType) {
         if (requestMethods != null && !requestMethods.isEmpty()) {
             this.requestMethods = Collections.unmodifiableSet(requestMethods);
         }

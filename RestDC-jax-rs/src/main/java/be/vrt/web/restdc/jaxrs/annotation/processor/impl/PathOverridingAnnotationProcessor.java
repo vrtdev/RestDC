@@ -36,9 +36,9 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
     private static final Logger LOGGER = LoggerFactory.getLogger(PathOverridingAnnotationProcessor.class);
 
     @Override
-    public ResourceDocument process(Path annotation, Method origin, Path baseAnnotation, Class<?> baseOrigin) {
+    public ResourceDocument process(Path annotation, Method annotatedElement, Path baseAnnotation, Class<?> baseOrigin) {
         LOGGER.trace("Processing RequestMapping {} with base {}", annotation, baseAnnotation);
-        RestDescription descriptionAnnotation = origin.getAnnotation(RestDescription.class);
+        RestDescription descriptionAnnotation = annotatedElement.getAnnotation(RestDescription.class);
 
         ResourceDocument.ResourceDocumentBuilder builder = new ResourceDocument.ResourceDocumentBuilder();
         String description = null;
@@ -46,9 +46,9 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
             description = descriptionAnnotation.value();
         }
         builder.withDescription(description);
-        LOGGER.trace("Calculated description for element {} is \"{}\">", origin, description);
+        LOGGER.trace("Calculated description for element {} is \"{}\">", annotatedElement, description);
         String baseUrl = "";
-        List<Annotation> httpMethodAnnotations = getAnnotationsOnElementAnnotatedWith(origin, HttpMethod.class);
+        List<Annotation> httpMethodAnnotations = getAnnotationsOnElementAnnotatedWith(annotatedElement, HttpMethod.class);
         Set<RequestMethod> mappedRequestMethods = new HashSet<>(httpMethodAnnotations.size());
         for (Annotation httpMethodAnnotation : httpMethodAnnotations) {
             HttpMethod httpMethod = httpMethodAnnotation.annotationType().getAnnotation(HttpMethod.class);
@@ -79,13 +79,13 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
 
         LOGGER.debug("Calculated base URL for base origin {} is \"{}\">", baseOrigin, baseUrl);
         builder.addAllRequestMethods(mappedRequestMethods)
-               .withReturnType(TypeReflectionUtil.getTypeFromReflectionType(origin.getGenericReturnType()));
+               .withReturnType(TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType()));
 
-        Consumes consumes = origin.getAnnotation(Consumes.class);
+        Consumes consumes = annotatedElement.getAnnotation(Consumes.class);
         if (consumes != null) {
             builder.addConsumingMimeTypesWithStrings(consumes.value());
         }
-        Produces produces = origin.getAnnotation(Produces.class);
+        Produces produces = annotatedElement.getAnnotation(Produces.class);
         if (produces != null) {
             builder.addProducingMimeTypesWithStrings(produces.value());
         }
@@ -95,7 +95,7 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
             builder.withUrl(new StringBuilder(baseUrl).append(annotation.value()).toString());
         }
 
-        addParametersForMethod(builder, origin);
+        addParametersForMethod(builder, annotatedElement);
         ResourceDocument resourceDocument = builder.build();
         LOGGER.debug("Build ResourceDocument {}", resourceDocument);
         return resourceDocument;

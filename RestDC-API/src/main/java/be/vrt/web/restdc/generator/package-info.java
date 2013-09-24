@@ -1,4 +1,4 @@
 /**
- * Package holding REST DC document set generator classes.
+ * Package holding REST DC document set generator interfaces.
  */
 package be.vrt.web.restdc.generator;
