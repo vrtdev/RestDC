@@ -36,7 +36,6 @@ public class RestDcControllerTest {
     @Test
     public void testGetAllDocumentSets() throws Exception {
         when(documentSetStore.findAllDocumentSets()).thenReturn(documentSets);
-
         Collection<DocumentSet> allDocumentSets = controller.getAllDocumentSets();
         assertThat(allDocumentSets, is(sameInstance(documentSets)));
     }

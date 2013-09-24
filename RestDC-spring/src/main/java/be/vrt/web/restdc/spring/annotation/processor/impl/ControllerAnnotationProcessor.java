@@ -22,7 +22,10 @@ public class ControllerAnnotationProcessor implements AnnotationProcessor<Contro
 
     private OverridingAnnotationProcessor<RequestMapping, ResourceDocument, Method, Class<?>> requestMappingAnnotationProcessor;
 
-
+    /**
+     * Initializes the processor with the overriding annotation processor.
+     * @param requestMappingAnnotationProcessor the processor
+     */
     public ControllerAnnotationProcessor(final OverridingAnnotationProcessor<RequestMapping, ResourceDocument, Method, Class<?>> requestMappingAnnotationProcessor) {
         this.requestMappingAnnotationProcessor = requestMappingAnnotationProcessor;
     }
