@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 
@@ -38,5 +39,15 @@ public class RestDcControllerTest {
 
         Collection<DocumentSet> allDocumentSets = controller.getAllDocumentSets();
         assertThat(allDocumentSets, is(sameInstance(documentSets)));
+    }
+
+    @Test
+    public void test_getAllDocumentSetsInModelAndView() throws Exception {
+        when(documentSetStore.findAllDocumentSets()).thenReturn(documentSets);
+        controller.setHtmlModelName("model");
+        controller.setHtmlViewName("view");
+        ModelAndView mav = controller.getAllDocumentSetsAsModelAndView();
+        assertThat(mav.getViewName(), is("view"));
+        assertThat((Collection<DocumentSet>)mav.getModel().get("model"), is(sameInstance(documentSets)));
     }
 }
