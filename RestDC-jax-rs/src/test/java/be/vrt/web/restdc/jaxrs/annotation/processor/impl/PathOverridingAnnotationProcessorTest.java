@@ -13,10 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -45,9 +47,9 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("Map").withGenericTypeNames(new String[]{"T extends Dummy", "super Dummy"}).build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -61,9 +63,9 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("Map").withGenericTypeNames("X", "Y extends Dummy").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -77,9 +79,9 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("Map").withGenericTypeNames(new String[]{"T extends X", "V extends Y extends Dummy"}).build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -93,9 +95,9 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("Map").withGenericTypeNames(new String[]{"extends X", "super Y extends Dummy"}).build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -109,8 +111,8 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.DELETE));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("void").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
         List<Parameter> parameters = document.getParameters();
         assertThat(parameters, hasSize(1));
         assertThat(parameters.get(0),
@@ -129,8 +131,8 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.POST));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("void").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
         List<Parameter> parameters = document.getParameters();
         assertThat(parameters, hasSize(1));
         assertThat(parameters.get(0),
@@ -149,8 +151,8 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.PUT));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("void").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
         List<Parameter> parameters = document.getParameters();
         assertThat(parameters, hasSize(1));
         assertThat(parameters.get(0),
@@ -169,9 +171,9 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is("Gets a list of dummies"));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("List").withGenericTypeNames(new String[]{"Dummy"}).build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -185,8 +187,8 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is("Gets a dummy"));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("Dummy").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
         List<Parameter> parameters = document.getParameters();
         assertThat(parameters, hasSize(3));
         assertThat(parameters.get(0),
@@ -202,7 +204,7 @@ public class PathOverridingAnnotationProcessorTest {
 
     @Test
     public void testProcessTestResourceMappingMethodEmptyMapping() throws Exception {
-        Method method = TestResource.class.getMethod("mappingMethodEmptyMapping");
+        Method method = TestResource.class.getMethod("mappingMethodEmptyMapping", SecurityContext.class);
 
         ResourceDocument document = processor.process(method.getAnnotation(Path.class), method, TestResource.class.getAnnotation(Path.class), TestResource.class);
 
@@ -211,10 +213,10 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getRequestMethods(), hasItems(RequestMethod.GET));
         assertThat(document.getDescription(), is(nullValue()));
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("void").build()));
-        assertThat(document.getConsumesMimeTypes(), is(nullValue()));
-        assertThat(document.getProducesMimeTypes(), is(nullValue()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
         List<Parameter> parameters = document.getParameters();
-        assertThat(parameters, is(nullValue()));
+        assertThat(parameters, is(empty()));
     }
 
     @Test
@@ -235,7 +237,7 @@ public class PathOverridingAnnotationProcessorTest {
         Set<MimeType> producesMimeTypes = document.getProducesMimeTypes();
         assertThat(producesMimeTypes, hasSize(2));
         assertThat(producesMimeTypes, hasItems(MimeType.APPLICATION_XML, MimeType.getMimeType("bladie/die")));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -255,7 +257,7 @@ public class PathOverridingAnnotationProcessorTest {
         Set<MimeType> producesMimeTypes = document.getProducesMimeTypes();
         assertThat(producesMimeTypes, hasSize(1));
         assertThat(producesMimeTypes, hasItems(MimeType.APPLICATION_XML));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -275,7 +277,7 @@ public class PathOverridingAnnotationProcessorTest {
         Set<MimeType> producesMimeTypes = document.getProducesMimeTypes();
         assertThat(producesMimeTypes, hasSize(1));
         assertThat(producesMimeTypes, hasItems(MimeType.APPLICATION_XML));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
@@ -295,6 +297,6 @@ public class PathOverridingAnnotationProcessorTest {
         Set<MimeType> producesMimeTypes = document.getProducesMimeTypes();
         assertThat(producesMimeTypes, hasSize(1));
         assertThat(producesMimeTypes, hasItems(MimeType.APPLICATION_XML));
-        assertThat(document.getParameters(), is(nullValue()));
+        assertThat(document.getParameters(), is(empty()));
     }
 }

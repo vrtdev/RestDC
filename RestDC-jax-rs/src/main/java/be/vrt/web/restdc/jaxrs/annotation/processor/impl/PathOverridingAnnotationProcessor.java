@@ -21,7 +21,9 @@ import javax.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +32,7 @@ import java.util.Set;
  * @author Mike Seghers
  */
 public class PathOverridingAnnotationProcessor implements OverridingAnnotationProcessor<Path, ResourceDocument, Method, Class<?>> {
+    public static final List<Class<? extends Annotation>> ALLOWED_ANNOTATION_TYPES = Arrays.asList(PathParam.class, QueryParam.class, HeaderParam.class, RestDescription.class);
     /**
      * SLF4J Logger.
      */
@@ -78,8 +81,7 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
         }
 
         LOGGER.debug("Calculated base URL for base origin {} is \"{}\">", baseOrigin, baseUrl);
-        builder.addAllRequestMethods(mappedRequestMethods)
-               .withReturnType(TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType()));
+        builder.addAllRequestMethods(mappedRequestMethods).withReturnType(TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType()));
 
         Consumes consumes = annotatedElement.getAnnotation(Consumes.class);
         if (consumes != null) {
@@ -126,52 +128,65 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
         if (genericParameterTypes.length > 0) {
             Annotation[][] parameterAnnotations = requestMappingMethod.getParameterAnnotations();
             for (int i = 0; i < genericParameterTypes.length; i++) {
-                Parameter parameter = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i]);
-                if (parameter.getName() == null && parameter.getParameterLocation() != ParameterLocation.BODY) {
-                    LOGGER.warn("A parameter was build without a name, Spring's auto-discovery apparently was unable to " +
-                            "get parameter names, and you didn't specify a specific name in the annotation on the parameter. " +
-                            "Your documentation might not be clear to the user!\nTo give you some context, here is the method information: {}", requestMappingMethod);
-                }
+                Parameter parameter = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i], builder);
 
-                builder.addParameter(parameter);
             }
         }
     }
 
-    private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final java.lang.reflect.Type genericParameterType) {
+    private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final Type genericParameterType, ResourceDocument.ResourceDocumentBuilder rdBuilder) {
         LOGGER.trace("Building parameter based on annotations:\n{}", specificParameterAnnotations);
-        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
-        ParameterLocation location = null;
-        boolean required = true;
-        String name = null;
-        if (specificParameterAnnotations.length == 0) {
-            //No annotation at all means request body parameter
-            location = ParameterLocation.BODY;
-        } else if (specificParameterAnnotations.length == 1 && specificParameterAnnotations[0].annotationType().equals(RestParameterName.class)) {
-            location = ParameterLocation.BODY;
-            name = ((RestParameterName)specificParameterAnnotations[0]).value();
-        } else {
-            for (Annotation annotation : specificParameterAnnotations) {
-                if (annotation instanceof PathParam) {
-                    location = ParameterLocation.PATH;
-                    name = ((PathParam) annotation).value();
-                } else if (annotation instanceof QueryParam) {
-                    location = ParameterLocation.PARAMETERS;
-                    QueryParam queryParam = (QueryParam) annotation;
-                    name = queryParam.value();
-                } else if (annotation instanceof HeaderParam) {
-                    location = ParameterLocation.HEADER;
-                    HeaderParam headerParam = (HeaderParam) annotation;
-                    name = headerParam.value();
-                } else if (annotation instanceof RestDescription) {
-                    builder.withDescription(((RestDescription) annotation).value());
+        Parameter parameter = null;
+        if (isDocumentableAnnotationArray(specificParameterAnnotations)) {
+            Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
+            ParameterLocation location = null;
+            boolean required = true;
+            String name = null;
+            if (specificParameterAnnotations.length == 0) {
+                //No annotation at all means request body parameter
+                location = ParameterLocation.BODY;
+            } else if (specificParameterAnnotations.length == 1 && specificParameterAnnotations[0].annotationType().equals(RestParameterName.class)) {
+                location = ParameterLocation.BODY;
+                name = ((RestParameterName) specificParameterAnnotations[0]).value();
+            } else {
+                for (Annotation annotation : specificParameterAnnotations) {
+                    if (annotation instanceof PathParam) {
+                        location = ParameterLocation.PATH;
+                        name = ((PathParam) annotation).value();
+                    } else if (annotation instanceof QueryParam) {
+                        location = ParameterLocation.PARAMETERS;
+                        QueryParam queryParam = (QueryParam) annotation;
+                        name = queryParam.value();
+                    } else if (annotation instanceof HeaderParam) {
+                        location = ParameterLocation.HEADER;
+                        HeaderParam headerParam = (HeaderParam) annotation;
+                        name = headerParam.value();
+                    } else if (annotation instanceof RestDescription) {
+                        builder.withDescription(((RestDescription) annotation).value());
+                    }
                 }
+            }
+            parameter = builder.withName(name).withParameterLocation(location).isRequired(required).build();
+            rdBuilder.addParameter(parameter);
+        }
+
+        LOGGER.trace("Done filling parameter based on annotations:\n{}", parameter);
+        return parameter;
+    }
+
+    private boolean isDocumentableAnnotationArray(Annotation[] annotations) {
+        boolean result = false;
+        if (annotations.length == 0) {
+            result = true;
+        } if (annotations.length == 1 && annotations[0].annotationType().equals(RestParameterName.class)) {
+            result = true;
+        } else {
+            int i = 0;
+            while(!result && i < annotations.length) {
+                result = ALLOWED_ANNOTATION_TYPES.contains(annotations[i++].annotationType());
             }
         }
 
-        Parameter parameter = builder.withName(name).withParameterLocation(location)
-                                     .isRequired(required).build();
-        LOGGER.trace("Done filling parameter based on annotations:\n{}", parameter);
-        return parameter;
+        return result;
     }
 }
