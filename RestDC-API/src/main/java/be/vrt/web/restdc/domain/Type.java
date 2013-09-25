@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Mike Seghers
  */
-public class Type {
+public final class Type {
     public static final int HASH_PRIME = 31;
     private String typeName;
     private String[] genericTypeNames;
@@ -26,7 +26,7 @@ public class Type {
     }
 
     public String[] getGenericTypeNames() {
-        return genericTypeNames;
+        return Arrays.copyOf(genericTypeNames, genericTypeNames.length);
     }
 
     @Override

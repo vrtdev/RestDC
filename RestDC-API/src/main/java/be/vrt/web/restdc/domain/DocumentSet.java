@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Mike Seghers
  */
-public class DocumentSet {
+public final class DocumentSet {
     private String id;
     private List<ResourceDocument> documents;
 

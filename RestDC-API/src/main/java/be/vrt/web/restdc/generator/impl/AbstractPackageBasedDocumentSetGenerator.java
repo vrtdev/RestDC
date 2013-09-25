@@ -44,8 +44,7 @@ public abstract class AbstractPackageBasedDocumentSetGenerator<T extends Annotat
     public final DocumentSet generate() {
         Reflections reflections = new Reflections(basePackageName);
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(annotationType);
-        DocumentSet documentSet = buildDocumentSetForClasses(classes);
-        return documentSet;
+        return buildDocumentSetForClasses(classes);
     }
 
     private DocumentSet buildDocumentSetForClasses(final Set<Class<?>> classes) {

@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author Mike Seghers
  */
-public class ResourceDocument {
+public final class ResourceDocument {
     private Set<RequestMethod> requestMethods;
 
     private String url;
