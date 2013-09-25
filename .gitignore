@@ -67,3 +67,7 @@ build/
 ### RestDC-UI Angular
 RestDC-UI/Angular/stylesheets/*
 RestDC-UI/Angular/node_modules
+
+
+### Gradle ###
+build

@@ -14,14 +14,14 @@ import java.lang.reflect.AnnotatedElement;
  */
 public interface AnnotationProcessor<T extends Annotation, R, AE extends AnnotatedElement> {
     /**
-     * Process the annotation, which was found on the given origin. Callers of this method should re-assure that the
-     * origin is indeed the origin of the annotation!
+     * Process the annotation, which was found on the given annotatedElement. Callers of this method should re-assure that the
+     * annotatedElement is indeed the element annotated with the annotation.
      *
-     * @param annotation the annotation to process
-     * @param origin     the origin of the given annotation
+     * @param annotation       the annotation to process
+     * @param annotatedElement the annotated element of the given annotation
      * @return the processing result
      */
-    R process(T annotation, AE origin);
+    R process(T annotation, AE annotatedElement);
 
 
 }

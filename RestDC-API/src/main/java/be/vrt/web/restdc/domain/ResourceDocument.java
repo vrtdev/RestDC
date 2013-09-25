@@ -1,5 +1,7 @@
 package be.vrt.web.restdc.domain;
 
+import com.google.common.base.Objects;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,23 +30,16 @@ public class ResourceDocument {
 
     private Type returnType;
 
-    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description,
-                             final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes,
+    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description, final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes,
                              final List<Parameter> parameters, final Type returnType) {
         if (requestMethods != null && !requestMethods.isEmpty()) {
             this.requestMethods = Collections.unmodifiableSet(requestMethods);
         }
         this.url = url;
         this.description = description;
-        if (consumesMimeTypes != null && !consumesMimeTypes.isEmpty()) {
-            this.consumesMimeTypes = Collections.unmodifiableSet(consumesMimeTypes);
-        }
-        if (producesMimeTypes != null && !producesMimeTypes.isEmpty()) {
-            this.producesMimeTypes = Collections.unmodifiableSet(producesMimeTypes);
-        }
-        if (parameters != null && !parameters.isEmpty()) {
-            this.parameters = Collections.unmodifiableList(parameters);
-        }
+        this.consumesMimeTypes = Collections.unmodifiableSet(consumesMimeTypes);
+        this.producesMimeTypes = Collections.unmodifiableSet(producesMimeTypes);
+        this.parameters = Collections.unmodifiableList(parameters);
         this.returnType = returnType;
     }
 
@@ -78,15 +73,8 @@ public class ResourceDocument {
 
     @Override
     public String toString() {
-        return "ResourceDocument{" +
-                "requestMethods=" + requestMethods +
-                ", url='" + url + '\'' +
-                ", description='" + description + '\'' +
-                ", consumesMimeTypes=" + consumesMimeTypes +
-                ", producesMimeTypes=" + producesMimeTypes +
-                ", parameters=" + parameters +
-                ", returnType=" + returnType +
-                '}';
+        return Objects.toStringHelper(this).add("requestMethods", requestMethods).add("url", url).add("description", description).add("consumesMimeTypes", consumesMimeTypes)
+                      .add("producesMimeTypes", producesMimeTypes).add("parameters", parameters).add("returnType", returnType).toString();
     }
 
     /**
@@ -175,7 +163,7 @@ public class ResourceDocument {
          * @param strings the strings which represent mime types
          * @return this builder
          */
-        public ResourceDocumentBuilder addConsumingMimeTypesWithStrings(final String[] strings) {
+        public ResourceDocumentBuilder addConsumingMimeTypesWithStrings(final String... strings) {
             for (String string : strings) {
                 this.addConsumingMimeType(MimeType.getMimeType(string));
             }
@@ -211,7 +199,7 @@ public class ResourceDocument {
          * @param strings the strings which represent mime types
          * @return this builder
          */
-        public ResourceDocumentBuilder addProducingMimeTypesWithStrings(final String[] strings) {
+        public ResourceDocumentBuilder addProducingMimeTypesWithStrings(final String... strings) {
             for (String string : strings) {
                 this.addProducingMimeType(MimeType.getMimeType(string));
             }

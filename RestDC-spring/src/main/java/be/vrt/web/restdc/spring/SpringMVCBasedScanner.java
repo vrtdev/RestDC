@@ -1,6 +1,6 @@
 package be.vrt.web.restdc.spring;
 
-import be.vrt.web.restdc.AbstractPackageBasedDocumentSetGenerator;
+import be.vrt.web.restdc.generator.impl.AbstractPackageBasedDocumentSetGenerator;
 import be.vrt.web.restdc.annotation.processor.AnnotationProcessor;
 import be.vrt.web.restdc.domain.ResourceDocument;
 import org.springframework.stereotype.Controller;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 /**
- * {@link be.vrt.web.restdc.DocumentSetGenerator} implementation for Spring MVC based generation of a REST API {@link
+ * {@link be.vrt.web.restdc.generator.DocumentSetGenerator} implementation for Spring MVC based generation of a REST API {@link
  * be.vrt.web.restdc.domain.DocumentSet}.
  * <p/>
  * This generator picks up all classes in a given package annotated with {@link org.springframework.stereotype.Controller}.

@@ -67,8 +67,9 @@ public class DocumentSet {
          *
          * @param documents all ResourceDocuments to be added
          */
-        public void addAll(final List<ResourceDocument> documents) {
+        public DocumentSetBuilder addAll(final List<ResourceDocument> documents) {
             this.documents.addAll(documents);
+            return this;
         }
 
         /**

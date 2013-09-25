@@ -1,4 +1,4 @@
-package be.vrt.web.restdc;
+package be.vrt.web.restdc.generator;
 
 import be.vrt.web.restdc.domain.DocumentSet;
 

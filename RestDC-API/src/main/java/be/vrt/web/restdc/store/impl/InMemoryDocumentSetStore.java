@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DocumentSetStore implementation, which simply keeps documents in store. Not that this class holds a registry at the
+ * DocumentSetStore implementation, which simply keeps documents in memory. Note that this class holds a registry at the
  * instance level. You should therefore always re-use the same instance of this class if you want to build up an entire
  * store.
  *
@@ -18,7 +18,7 @@ public class InMemoryDocumentSetStore implements DocumentSetStore {
     private Map<String, DocumentSet> registry;
 
     /**
-     * Constructor, initializing the in memory registry.
+     * Initializes the in memory store.
      */
     public InMemoryDocumentSetStore() {
         registry = new HashMap<>();
