@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Mike Seghers
  */
-public class Parameter {
+public final class Parameter {
     private static final int HASH_PRIME = 31;
     private String name;
 

@@ -18,7 +18,7 @@ public final class Type {
 
     private Type(final String typeName, final String[] genericTypeNames) {
         this.typeName = typeName;
-        this.genericTypeNames = Arrays.copyOf(genericTypeNames, genericTypeNames.length); ;
+        this.genericTypeNames = Arrays.copyOf(genericTypeNames, genericTypeNames.length);
     }
 
     public String getTypeName() {
