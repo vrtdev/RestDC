@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ *
+ *
  * @author Mike Seghers
  */
 public class PathAnnotationProcessor implements AnnotationProcessor<Path, List<ResourceDocument>, Class<?>> {
@@ -21,6 +23,10 @@ public class PathAnnotationProcessor implements AnnotationProcessor<Path, List<R
 
     private OverridingAnnotationProcessor<Path, ResourceDocument, Method, Class<?>> pathAnnotationProcessor;
 
+    /**
+     * Initialized the processor with the required overriding annotation processor.
+     * @param pathAnnotationProcessor the overriding annotation processor
+     */
     public PathAnnotationProcessor(final OverridingAnnotationProcessor<Path, ResourceDocument, Method, Class<?>> pathAnnotationProcessor) {
         this.pathAnnotationProcessor = pathAnnotationProcessor;
     }

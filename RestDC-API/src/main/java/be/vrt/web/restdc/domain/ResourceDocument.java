@@ -30,8 +30,7 @@ public class ResourceDocument {
 
     private Type returnType;
 
-    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description, final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes,
-                             final List<Parameter> parameters, final Type returnType) {
+    private ResourceDocument(final Set<RequestMethod> requestMethods, final String url, final String description, final Set<MimeType> consumesMimeTypes, final Set<MimeType> producesMimeTypes, final List<Parameter> parameters, final Type returnType) {
         if (requestMethods != null && !requestMethods.isEmpty()) {
             this.requestMethods = Collections.unmodifiableSet(requestMethods);
         }
@@ -164,8 +163,10 @@ public class ResourceDocument {
          * @return this builder
          */
         public ResourceDocumentBuilder addConsumingMimeTypesWithStrings(final String... strings) {
-            for (String string : strings) {
-                this.addConsumingMimeType(MimeType.getMimeType(string));
+            if (strings != null) {
+                for (String string : strings) {
+                    this.addConsumingMimeType(MimeType.getMimeType(string));
+                }
             }
             return this;
         }
@@ -200,8 +201,10 @@ public class ResourceDocument {
          * @return this builder
          */
         public ResourceDocumentBuilder addProducingMimeTypesWithStrings(final String... strings) {
-            for (String string : strings) {
-                this.addProducingMimeType(MimeType.getMimeType(string));
+            if (strings != null) {
+                for (String string : strings) {
+                    this.addProducingMimeType(MimeType.getMimeType(string));
+                }
             }
             return this;
         }
@@ -213,7 +216,9 @@ public class ResourceDocument {
          * @return this builder
          */
         public ResourceDocumentBuilder addAllParameters(final List<Parameter> parameters) {
-            this.parameters.addAll(parameters);
+            if (parameters != null) {
+                this.parameters.addAll(parameters);
+            }
             return this;
         }
 

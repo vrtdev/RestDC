@@ -6,6 +6,7 @@ import be.vrt.web.restdc.domain.Parameter;
 import be.vrt.web.restdc.domain.ParameterLocation;
 import be.vrt.web.restdc.domain.RequestMethod;
 import be.vrt.web.restdc.domain.ResourceDocument;
+import be.vrt.web.restdc.domain.Type;
 import be.vrt.web.restdc.jaxrs.annotation.RestParameterName;
 import be.vrt.web.restdc.reflection.TypeReflectionUtil;
 import org.slf4j.Logger;
@@ -21,7 +22,6 @@ import javax.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,18 +39,41 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
     private static final Logger LOGGER = LoggerFactory.getLogger(PathOverridingAnnotationProcessor.class);
 
     @Override
-    public ResourceDocument process(Path annotation, Method annotatedElement, Path baseAnnotation, Class<?> baseOrigin) {
+    public ResourceDocument process(final Path annotation, final Method annotatedElement, final Path baseAnnotation, final Class<?> baseOrigin) {
         LOGGER.trace("Processing RequestMapping {} with base {}", annotation, baseAnnotation);
-        RestDescription descriptionAnnotation = annotatedElement.getAnnotation(RestDescription.class);
-
         ResourceDocument.ResourceDocumentBuilder builder = new ResourceDocument.ResourceDocumentBuilder();
+        ResourceDocument resourceDocument = builder.withDescription(getDescription(annotatedElement)).addAllRequestMethods(getRequestMethods(annotatedElement))
+                                                   .withReturnType(getReturnType(annotatedElement)).withUrl(getURL(baseAnnotation, annotation))
+                                                   .addConsumingMimeTypesWithStrings(getConsumingMimeTypes(baseOrigin.getAnnotation(Consumes.class)))
+                                                   .addProducingMimeTypesWithStrings(getProducingMimeTypes(baseOrigin.getAnnotation(Produces.class)))
+                                                   .addConsumingMimeTypesWithStrings(getConsumingMimeTypes(annotatedElement.getAnnotation(Consumes.class)))
+                                                   .addProducingMimeTypesWithStrings(getProducingMimeTypes(annotatedElement.getAnnotation(Produces.class)))
+                                                   .addAllParameters(getParameters(annotatedElement)).build();
+        LOGGER.debug("Build ResourceDocument {}", resourceDocument);
+        return resourceDocument;
+    }
+
+    private String getDescription(final Method annotatedElement) {
+        RestDescription descriptionAnnotation = annotatedElement.getAnnotation(RestDescription.class);
         String description = null;
         if (descriptionAnnotation != null) {
             description = descriptionAnnotation.value();
         }
-        builder.withDescription(description);
-        LOGGER.trace("Calculated description for element {} is \"{}\">", annotatedElement, description);
+        return description;
+    }
+
+    private String getURL(final Path baseAnnotation, final Path annotation) {
         String baseUrl = "";
+        if (baseAnnotation != null && baseAnnotation.value().length() > 0) {
+            baseUrl = baseAnnotation.value();
+        }
+        if (annotation.value().length() > 0) {
+            baseUrl += annotation.value();
+        }
+        return baseUrl;
+    }
+
+    private Set<RequestMethod> getRequestMethods(final Method annotatedElement) {
         List<Annotation> httpMethodAnnotations = getAnnotationsOnElementAnnotatedWith(annotatedElement, HttpMethod.class);
         Set<RequestMethod> mappedRequestMethods = new HashSet<>(httpMethodAnnotations.size());
         for (Annotation httpMethodAnnotation : httpMethodAnnotations) {
@@ -61,46 +84,28 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
             mappedRequestMethods.add(RequestMethod.GET);
         }
 
+        return mappedRequestMethods;
+    }
 
-        RequestMethod[] requestMethods = null;
+    private Type getReturnType(final Method annotatedElement) {
+        return TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType());
+    }
 
 
-        if (baseAnnotation != null) {
-            if (baseAnnotation.value().length() > 0) {
-                baseUrl = baseAnnotation.value();
-            }
-        }
-
-        Consumes baseConsumes = baseOrigin.getAnnotation(Consumes.class);
-        if (baseConsumes != null) {
-            builder.addConsumingMimeTypesWithStrings(baseConsumes.value());
-        }
-        Produces baseProduces = baseOrigin.getAnnotation(Produces.class);
-        if (baseProduces != null) {
-            builder.addProducingMimeTypesWithStrings(baseProduces.value());
-        }
-
-        LOGGER.debug("Calculated base URL for base origin {} is \"{}\">", baseOrigin, baseUrl);
-        builder.addAllRequestMethods(mappedRequestMethods).withReturnType(TypeReflectionUtil.getTypeFromReflectionType(annotatedElement.getGenericReturnType()));
-
-        Consumes consumes = annotatedElement.getAnnotation(Consumes.class);
-        if (consumes != null) {
-            builder.addConsumingMimeTypesWithStrings(consumes.value());
-        }
-        Produces produces = annotatedElement.getAnnotation(Produces.class);
+    private String[] getProducingMimeTypes(final Produces produces) {
+        String[] value = null;
         if (produces != null) {
-            builder.addProducingMimeTypesWithStrings(produces.value());
+            value = produces.value();
         }
-        if (annotation.value().length() == 0) {
-            builder.withUrl(baseUrl);
-        } else {
-            builder.withUrl(new StringBuilder(baseUrl).append(annotation.value()).toString());
-        }
+        return value;
+    }
 
-        addParametersForMethod(builder, annotatedElement);
-        ResourceDocument resourceDocument = builder.build();
-        LOGGER.debug("Build ResourceDocument {}", resourceDocument);
-        return resourceDocument;
+    private String[] getConsumingMimeTypes(final Consumes consumes) {
+        String[] value = null;
+        if (consumes != null) {
+            value = consumes.value();
+        }
+        return value;
     }
 
     /**
@@ -122,67 +127,77 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
         return result;
     }
 
-    private void addParametersForMethod(final ResourceDocument.ResourceDocumentBuilder builder, final Method requestMappingMethod) {
+    private List<Parameter> getParameters(final Method requestMappingMethod) {
         LOGGER.trace("Building parameters for method {}", requestMappingMethod);
         java.lang.reflect.Type[] genericParameterTypes = requestMappingMethod.getGenericParameterTypes();
+        List<Parameter> result = null;
         if (genericParameterTypes.length > 0) {
+            result = new ArrayList<>(genericParameterTypes.length);
             Annotation[][] parameterAnnotations = requestMappingMethod.getParameterAnnotations();
             for (int i = 0; i < genericParameterTypes.length; i++) {
-                Parameter parameter = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i], builder);
-
+                Parameter pfa = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i]);
+                if (pfa != null) {
+                    result.add(pfa);
+                }
             }
         }
+        return result;
     }
 
-    private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final Type genericParameterType, ResourceDocument.ResourceDocumentBuilder rdBuilder) {
+    private Parameter getParameterFromAnnotations(final Annotation[] specificParameterAnnotations, final java.lang.reflect.Type genericParameterType) {
         LOGGER.trace("Building parameter based on annotations:\n{}", specificParameterAnnotations);
         Parameter parameter = null;
         if (isDocumentableAnnotationArray(specificParameterAnnotations)) {
-            Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
-            ParameterLocation location = null;
-            boolean required = true;
-            String name = null;
-            if (specificParameterAnnotations.length == 0) {
-                //No annotation at all means request body parameter
-                location = ParameterLocation.BODY;
-            } else if (specificParameterAnnotations.length == 1 && specificParameterAnnotations[0].annotationType().equals(RestParameterName.class)) {
-                location = ParameterLocation.BODY;
-                name = ((RestParameterName) specificParameterAnnotations[0]).value();
-            } else {
-                for (Annotation annotation : specificParameterAnnotations) {
-                    if (annotation instanceof PathParam) {
-                        location = ParameterLocation.PATH;
-                        name = ((PathParam) annotation).value();
-                    } else if (annotation instanceof QueryParam) {
-                        location = ParameterLocation.PARAMETERS;
-                        QueryParam queryParam = (QueryParam) annotation;
-                        name = queryParam.value();
-                    } else if (annotation instanceof HeaderParam) {
-                        location = ParameterLocation.HEADER;
-                        HeaderParam headerParam = (HeaderParam) annotation;
-                        name = headerParam.value();
-                    } else if (annotation instanceof RestDescription) {
-                        builder.withDescription(((RestDescription) annotation).value());
-                    }
-                }
-            }
-            parameter = builder.withName(name).withParameterLocation(location).isRequired(required).build();
-            rdBuilder.addParameter(parameter);
+            parameter = getDocumentableParameter(specificParameterAnnotations, genericParameterType);
         }
-
         LOGGER.trace("Done filling parameter based on annotations:\n{}", parameter);
         return parameter;
     }
 
-    private boolean isDocumentableAnnotationArray(Annotation[] annotations) {
+    private Parameter getDocumentableParameter(Annotation[] specificParameterAnnotations, java.lang.reflect.Type genericParameterType) {
+        Parameter parameter;
+        Parameter.ParameterBuilder builder = new Parameter.ParameterBuilder(TypeReflectionUtil.getTypeFromReflectionType(genericParameterType));
+        ParameterLocation location = null;
+        boolean required = true;
+        String name = null;
+        if (specificParameterAnnotations.length == 0) {
+            //No annotation at all means request body parameter
+            location = ParameterLocation.BODY;
+        } else if (specificParameterAnnotations.length == 1 && specificParameterAnnotations[0].annotationType().equals(RestParameterName.class)) {
+            location = ParameterLocation.BODY;
+            name = ((RestParameterName) specificParameterAnnotations[0]).value();
+        } else {
+            for (Annotation annotation : specificParameterAnnotations) {
+                if (annotation instanceof PathParam) {
+                    location = ParameterLocation.PATH;
+                    name = ((PathParam) annotation).value();
+                } else if (annotation instanceof QueryParam) {
+                    location = ParameterLocation.PARAMETERS;
+                    QueryParam queryParam = (QueryParam) annotation;
+                    name = queryParam.value();
+                } else if (annotation instanceof HeaderParam) {
+                    location = ParameterLocation.HEADER;
+                    HeaderParam headerParam = (HeaderParam) annotation;
+                    name = headerParam.value();
+                } else if (annotation instanceof RestDescription) {
+                    builder.withDescription(((RestDescription) annotation).value());
+                }
+            }
+        }
+        parameter = builder.withName(name).withParameterLocation(location).isRequired(required).build();
+        return parameter;
+    }
+
+    private boolean isDocumentableAnnotationArray(final Annotation[] annotations) {
         boolean result = false;
         if (annotations.length == 0) {
             result = true;
-        } if (annotations.length == 1 && annotations[0].annotationType().equals(RestParameterName.class)) {
+        }
+        if (annotations.length == 1 && annotations[0].annotationType().equals(RestParameterName.class)) {
             result = true;
         } else {
             int i = 0;
-            while(!result && i < annotations.length) {
+            while (!result && i < annotations.length) {
                 result = ALLOWED_ANNOTATION_TYPES.contains(annotations[i++].annotationType());
             }
         }

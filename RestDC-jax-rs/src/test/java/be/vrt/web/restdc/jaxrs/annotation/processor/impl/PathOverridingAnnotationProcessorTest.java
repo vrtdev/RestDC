@@ -215,8 +215,7 @@ public class PathOverridingAnnotationProcessorTest {
         assertThat(document.getReturnType(), is(new Type.TypeBuilder("void").build()));
         assertThat(document.getConsumesMimeTypes(), is(empty()));
         assertThat(document.getProducesMimeTypes(), is(empty()));
-        List<Parameter> parameters = document.getParameters();
-        assertThat(parameters, is(empty()));
+        assertThat(document.getParameters(), is(empty()));
     }
 
     @Test
