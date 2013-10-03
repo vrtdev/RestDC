@@ -44,9 +44,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/vrtdev/RestDC</url>
-        <connection>scm:git:git://github.com/vrtdev/RestDC.git</connection>
-        <developerConnection>scm:git:git@github.com:vrtdev/RestDC.git</developerConnection>
+        <url>https://bitbucket.org/vrtdev/RestDC</url>
+        <connection>scm:git:git://bitbucket.org/vrtdev/RestDC.git</connection>
+        <developerConnection>scm:git:git@bitbucket.org:vrtdev/RestDC.git</developerConnection>
     </scm>
 
     <issueManagement>
