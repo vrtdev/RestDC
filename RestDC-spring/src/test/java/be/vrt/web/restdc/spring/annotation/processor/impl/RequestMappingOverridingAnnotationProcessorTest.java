@@ -147,7 +147,7 @@ public class RequestMappingOverridingAnnotationProcessorTest {
 
     @Test
     public void testProcessTestControllerSave() throws Exception {
-        Method method = TestController.class.getMethod("saveDummy", Dummy.class);
+        Method method = TestController.class.getMethod("saveDummy", Dummy.class, String.class);
 
         when(parameterNameDiscoverer.getParameterNames(method)).thenReturn(new String[]{"dummy"});
         ResourceDocument document = processor

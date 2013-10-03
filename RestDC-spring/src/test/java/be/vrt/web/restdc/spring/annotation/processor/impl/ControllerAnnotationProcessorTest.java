@@ -43,7 +43,7 @@ public class ControllerAnnotationProcessorTest {
         Controller controller = TestController.class.getAnnotation(Controller.class);
         Method getDummyMethod = TestController.class.getMethod("getDummy", String.class, String.class, String.class);
         Method getDummiesMethod = TestController.class.getMethod("getDummies");
-        Method saveDummyMethod = TestController.class.getMethod("saveDummy", Dummy.class);
+        Method saveDummyMethod = TestController.class.getMethod("saveDummy", Dummy.class, String.class);
         Method deleteMethod = TestController.class.getMethod("delete", String.class);
         Method mapMethod = TestController.class.getMethod("map");
         Method map2Method = TestController.class.getMethod("map2");

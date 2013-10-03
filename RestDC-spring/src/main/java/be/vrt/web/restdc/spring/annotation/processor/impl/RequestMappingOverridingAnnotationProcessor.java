@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -98,16 +99,28 @@ public class RequestMappingOverridingAnnotationProcessor implements OverridingAn
         LOGGER.trace("Building parameters for method {}", requestMappingMethod);
         java.lang.reflect.Type[] genericParameterTypes = requestMappingMethod.getGenericParameterTypes();
         if (genericParameterTypes.length > 0) {
-            Annotation[][] parameterAnnotations = requestMappingMethod.getParameterAnnotations();
-            String[] parametersNames = getBoundSafeMethodNames(requestMappingMethod, genericParameterTypes);
-            for (int i = 0; i < genericParameterTypes.length; i++) {
+            addParametersFromGenericParameterTypes(builder, requestMappingMethod, genericParameterTypes);
+        }
+    }
+
+    private void addParametersFromGenericParameterTypes(ResourceDocument.ResourceDocumentBuilder builder, Method requestMappingMethod, Type[] genericParameterTypes) {
+        Annotation[][] parameterAnnotations = requestMappingMethod.getParameterAnnotations();
+        String[] parametersNames = getBoundSafeMethodNames(requestMappingMethod, genericParameterTypes);
+        if (parameterAnnotations.length > 0) {
+            addParametersFromTypeAndNamesAndAnnotations(builder, requestMappingMethod, genericParameterTypes, parameterAnnotations, parametersNames);
+        }
+    }
+
+    private void addParametersFromTypeAndNamesAndAnnotations(ResourceDocument.ResourceDocumentBuilder builder, Method requestMappingMethod, Type[] genericParameterTypes, Annotation[][] parameterAnnotations, String[] parametersNames) {
+        for (int i = 0; i < genericParameterTypes.length; i++) {
+            if (parameterAnnotations[i].length > 0 ) {
                 Parameter parameter = getParameterFromAnnotations(parameterAnnotations[i], genericParameterTypes[i], parametersNames[i]);
                 if (parameter.getName() == null && parameter.getParameterLocation() != ParameterLocation.BODY) {
                     LOGGER.warn("A parameter was build without a name, Spring's auto-discovery apparently was unable to " +
-                                        "get parameter names, and you didn't specify a specific name in the annotation on the parameter. " +
-                                        "Your documentation might not be clear to the user!\nTo give you some context, here is the method information: {}", requestMappingMethod);
+                                    "get parameter names, and you didn't specify a specific name in the annotation on the parameter. " +
+                                    "Your documentation might not be clear to the user!\nTo give you some context, here is the method information: {}",
+                                requestMappingMethod);
                 }
-
                 builder.addParameter(parameter);
             }
         }

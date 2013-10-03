@@ -36,7 +36,7 @@ public class TestController<X, Y extends Dummy> {
     }
 
     @RequestMapping(value = "/dummy", method = {RequestMethod.POST, RequestMethod.PUT})
-    public void saveDummy(@RequestBody Dummy dummy) {
+    public void saveDummy(@RequestBody Dummy dummy, @SuppressWarnings("") String ignoredParameter) {
 
     }
 
