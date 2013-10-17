@@ -7,7 +7,7 @@
     <groupId>be.vrt.web.rest-dc</groupId>
     <artifactId>rest-dc-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.1.0</version>
 
     <modules>
         <module>RestDC-API</module>
@@ -127,6 +127,13 @@
                 <artifactId>servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- JBOSS VFS -->
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-vfs</artifactId>
+                <version>3.1.0.Final</version>
             </dependency>
 
             <!-- Testing frameworks -->
