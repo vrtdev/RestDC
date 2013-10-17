@@ -129,6 +129,13 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- JBOSS VFS -->
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-vfs</artifactId>
+                <version>3.1.0.Final</version>
+            </dependency>
+
             <!-- Testing frameworks -->
             <dependency>
                 <groupId>junit</groupId>
