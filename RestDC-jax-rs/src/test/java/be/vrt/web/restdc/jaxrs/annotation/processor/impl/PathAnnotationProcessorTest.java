@@ -39,7 +39,7 @@ public class PathAnnotationProcessorTest {
         Path path = TestResource.class.getAnnotation(Path.class);
         List<ResourceDocument> rds = pap.process(path, TestResource.class);
         assertThat(rds, is(notNullValue()));
-        verify(overridingProcessor, times(10)).process(Mockito.any(Path.class), Mockito.any(Method.class), eq(path), eq(TestResource.class));
+        verify(overridingProcessor, times(16)).process(Mockito.any(Path.class), Mockito.any(Method.class), eq(path), eq(TestResource.class));
     }
 
     @Test

@@ -219,6 +219,52 @@ public class PathOverridingAnnotationProcessorTest {
     }
 
     @Test
+    public void testJustGetAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simpleGet", RequestMethod.GET);
+    }
+
+    @Test
+    public void testJustPostAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simplePost", RequestMethod.POST);
+    }
+
+    @Test
+    public void testJustPutAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simplePut", RequestMethod.PUT);
+    }
+
+    @Test
+    public void testJustDeleteAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simpleDelete", RequestMethod.DELETE);
+    }
+
+    @Test
+    public void testJustHeadAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simpleHead", RequestMethod.HEAD);
+    }
+    @Test
+    public void testJustOptionsAnnotatedMethod() throws Exception {
+        testHttpMethodAnnotatedMethods("simpleOptions", RequestMethod.OPTIONS);
+    }
+
+    private void testHttpMethodAnnotatedMethods(String methodName, RequestMethod expectedMethod) throws NoSuchMethodException {
+        Method method = TestResource.class.getMethod(methodName);
+        ResourceDocument document = processor.process(method.getAnnotation(Path.class), method, TestResource.class.getAnnotation(Path.class), TestResource.class);
+        assertForHttpMethodAnnotedMethods(document,  "/test", expectedMethod);
+    }
+
+    private void assertForHttpMethodAnnotedMethods(ResourceDocument document, String expectedUrl, RequestMethod expectedMethod) {
+        assertThat(document.getUrl(), is(expectedUrl));
+        assertThat(document.getRequestMethods(), hasSize(1));
+        assertThat(document.getRequestMethods(), hasItems(expectedMethod));
+        assertThat(document.getDescription(), is(nullValue()));
+        assertThat(document.getReturnType(), is(new Type.TypeBuilder("Response").build()));
+        assertThat(document.getConsumesMimeTypes(), is(empty()));
+        assertThat(document.getProducesMimeTypes(), is(empty()));
+        assertThat(document.getParameters(), is(empty()));
+    }
+
+    @Test
     public void testProcessTestResourceWithMimeGetDummies() throws Exception {
         Method method = TestResourceWithMime.class.getMethod("getDummies");
 

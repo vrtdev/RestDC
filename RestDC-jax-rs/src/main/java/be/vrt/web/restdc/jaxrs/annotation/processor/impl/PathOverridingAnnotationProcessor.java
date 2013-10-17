@@ -67,7 +67,7 @@ public class PathOverridingAnnotationProcessor implements OverridingAnnotationPr
         if (baseAnnotation != null && baseAnnotation.value().length() > 0) {
             baseUrl = baseAnnotation.value();
         }
-        if (annotation.value().length() > 0) {
+        if (annotation != null && annotation.value().length() > 0) {
             baseUrl += annotation.value();
         }
         return baseUrl;
