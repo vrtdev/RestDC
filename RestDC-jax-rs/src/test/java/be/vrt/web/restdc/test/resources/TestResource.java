@@ -6,13 +6,16 @@ import be.vrt.web.restdc.test.Dummy;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +77,36 @@ public class TestResource<X, Y extends Dummy> {
     @Path(value = "/dummy/map4")
     @GET
     public Map<? extends X, ? super Y> map4() {
+        return null;
+    }
+
+    @GET
+    public Response simpleGet() {
+        return null;
+    }
+
+    @PUT
+    public Response simplePut() {
+        return null;
+    }
+
+    @POST
+    public Response simplePost() {
+        return null;
+    }
+
+    @DELETE
+    public Response simpleDelete() {
+        return null;
+    }
+
+    @HEAD
+    public Response simpleHead() {
+        return null;
+    }
+
+    @OPTIONS
+    public Response simpleOptions() {
         return null;
     }
 
