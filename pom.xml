@@ -54,19 +54,6 @@
         <url>https://github.com/vrtdev/RestDC/issues</url>
     </issueManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>VRT Nexus Release repo</name>
-            <url>http://poprod01.servers.vrt.be:8081/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>releases</id>
-            <name>VRT Nexus Release repo</name>
-            <url>http://poprod01.servers.vrt.be:8081/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencyManagement>
         <dependencies>
             <!-- Project specific inter-dependencies-->
