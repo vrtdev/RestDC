@@ -101,14 +101,6 @@
                             <executable>${basedir}/runKarma.sh</executable>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <version>1.2.1</version>
-                <executions>
                     <execution><!-- Run our version calculation script -->
                         <id>Sonar coverage preparation</id>
                         <phase>verify</phase>
@@ -125,9 +117,11 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
 
     </build>
 
 
 </project>
+<!-- vim: set ts=4 sw=4 tw=0 et :-->
