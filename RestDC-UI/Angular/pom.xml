@@ -31,7 +31,7 @@
 
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
-                <version>0.29.4</version>
+                <version>1.0.10</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
@@ -53,6 +53,12 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>rubygems</groupId>
+                        <artifactId>sass</artifactId>
+                        <version>3.1.21</version>
+                        <type>gem</type>
+                    </dependency>
                     <dependency>
                         <groupId>rubygems</groupId>
                         <artifactId>compass</artifactId>
