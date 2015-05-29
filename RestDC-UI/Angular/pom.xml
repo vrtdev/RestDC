@@ -10,8 +10,20 @@
     <artifactId>angular-ui</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <root.dir>${basedir}</root.dir>
+        <gem.home>${root.dir}/target/rubygems</gem.home>
+        <gem.path>${root.dir}/target/rubygems</gem.path>
+    </properties>
+
     <name>RestDC Angular UI module</name>
     <description>REST DC Angular UI front facing module, to expose documentation through a single page app</description>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rubygems-releases</id>
+            <url>http://rubygems-proxy.torquebox.org/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
