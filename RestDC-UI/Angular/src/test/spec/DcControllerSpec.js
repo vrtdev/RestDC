@@ -77,7 +77,7 @@ describe("DcController", function(){
 		$httpMock.flush(); 
 		$time.flush();
 		var exp={ 
-			'url' : 'http://localhost:9876//v0_0_1/content',
+			'url' : url,
 			'body' : '', 
 			'code' : 404, 
 			'syntax' : 'javascript', 
