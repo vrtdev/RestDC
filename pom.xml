@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>be.vrt.web.rest-dc</groupId>
@@ -29,6 +27,7 @@
         <logback.version>1.0.13</logback.version>
         <jax-rs-api.version>1.1.1</jax-rs-api.version>
         <guava.version>15.0</guava.version>
+        <jgitflow.version>1.0-m4.3</jgitflow.version>
     </properties>
 
     <name>RestDC Parent project</name>
@@ -44,9 +43,9 @@
     </licenses>
 
     <scm>
-        <url>https://bitbucket.org/vrtdev/RestDC</url>
-        <connection>scm:git:git://bitbucket.org/vrtdev/RestDC.git</connection>
-        <developerConnection>scm:git:git@bitbucket.org:vrtdev/RestDC.git</developerConnection>
+        <url>https://github.com/vrtdev/RestDC</url>
+        <connection>scm:git:git://github.com/vrtdev/RestDC.git</connection>
+        <developerConnection>scm:git:git@github.com:vrtdev/RestDC.git</developerConnection>
     </scm>
 
     <issueManagement>
@@ -201,6 +200,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>${jgitflow.version}</version>
+                <configuration>
+                    <enableSshAgent>true</enableSshAgent>
+                    <noDeploy>true</noDeploy>
+                    <allowSnapshots>true</allowSnapshots>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <flowInitContext>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </flowInitContext>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -217,3 +230,4 @@
 
 
 </project>
+<!-- vim: set ts=4 sw=4 tw=0 et :-->
