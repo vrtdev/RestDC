@@ -1,17 +1,28 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>be.vrt.web.rest-dc.ui</groupId>
         <artifactId>rest-dc-ui-parent</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>angular-ui</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <root.dir>${basedir}</root.dir>
+        <gem.home>${root.dir}/target/rubygems</gem.home>
+        <gem.path>${root.dir}/target/rubygems</gem.path>
+    </properties>
+
     <name>RestDC Angular UI module</name>
     <description>REST DC Angular UI front facing module, to expose documentation through a single page app</description>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rubygems-releases</id>
+            <url>http://rubygems-proxy.torquebox.org/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
@@ -19,7 +30,7 @@
 
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
-                <version>0.29.4</version>
+                <version>1.0.10</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
@@ -41,6 +52,12 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>rubygems</groupId>
+                        <artifactId>sass</artifactId>
+                        <version>3.1.21</version>
+                        <type>gem</type>
+                    </dependency>
                     <dependency>
                         <groupId>rubygems</groupId>
                         <artifactId>compass</artifactId>
@@ -83,14 +100,6 @@
                             <executable>${basedir}/runKarma.sh</executable>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <version>1.2.1</version>
-                <executions>
                     <execution><!-- Run our version calculation script -->
                         <id>Sonar coverage preparation</id>
                         <phase>verify</phase>
@@ -107,9 +116,23 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>node_modules</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>
 
 
 </project>
+<!-- vim: set ts=4 sw=4 tw=0 et :-->
