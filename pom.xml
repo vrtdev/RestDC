@@ -5,7 +5,7 @@
     <groupId>be.vrt.web.rest-dc</groupId>
     <artifactId>rest-dc-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
 
     <modules>
         <module>RestDC-API</module>
